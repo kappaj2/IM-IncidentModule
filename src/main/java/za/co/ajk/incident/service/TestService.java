@@ -2,11 +2,8 @@ package za.co.ajk.incident.service;
 
 import java.util.Optional;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -37,15 +34,21 @@ public class TestService {
             
             // anonymousUser does not have a valid jwt token
             if (jwtToken1Optional.isPresent() && jwtToken1Optional.get().length() > 1) {
+    
+                String jwtTokenStored = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
                 
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                headers.set("Authorization", "Bearer " + jwtToken1Optional.get());
+//                HttpHeaders headers = new HttpHeaders();
+//                headers.setContentType(MediaType.APPLICATION_JSON);
+//                headers.set("Authorization", "Bearer " + jwtToken1Optional.get());
                 
-                HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+                //HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+            
                 
-                ResponseEntity<JsonNode> response = restTemplate
-                    .exchange(accountResourceUrl, HttpMethod.GET, entity, JsonNode.class);
+                ResponseEntity<JsonNode> response = restTemplate.getForEntity(accountResourceUrl, JsonNode.class);
+    
+                //restTemplate.exchange(accountResourceUrl, HttpMethod.GET, HttpEntity.EMPTY, JsonNode.class);
+                    //restTemplate.exchange(accountResourceUrl, HttpMethod.GET, null,JsonNode.class);
+                   // .exchange(accountResourceUrl, HttpMethod.GET, entity, JsonNode.class);
                 
                 JsonNode userNode = response.getBody();
                 Integer userId = userNode.get("id").asInt();
