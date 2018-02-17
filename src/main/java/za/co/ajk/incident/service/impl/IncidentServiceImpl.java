@@ -1,22 +1,26 @@
 package za.co.ajk.incident.service.impl;
 
-import za.co.ajk.incident.service.IncidentService;
-import za.co.ajk.incident.domain.Incident;
-import za.co.ajk.incident.repository.IncidentRepository;
-import za.co.ajk.incident.repository.search.IncidentSearchRepository;
-import za.co.ajk.incident.service.dto.IncidentDTO;
-import za.co.ajk.incident.service.mapper.IncidentMapper;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import za.co.ajk.incident.domain.Incident;
+import za.co.ajk.incident.repository.IncidentRepository;
+import za.co.ajk.incident.repository.search.IncidentSearchRepository;
+import za.co.ajk.incident.security.SecurityUtils;
+import za.co.ajk.incident.service.IncidentService;
+import za.co.ajk.incident.service.dto.CreateNewIncidentDTO;
+import za.co.ajk.incident.service.dto.IncidentDTO;
+import za.co.ajk.incident.service.mapper.IncidentMapper;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Incident.
@@ -38,7 +42,20 @@ public class IncidentServiceImpl implements IncidentService {
         this.incidentMapper = incidentMapper;
         this.incidentSearchRepository = incidentSearchRepository;
     }
-
+    
+    @Override
+    public IncidentDTO createNewIncident(CreateNewIncidentDTO createNewIncidentDTO){
+    
+        Optional<String> currentUserId = SecurityUtils.getCurrentUserLogin();
+    
+    
+    
+        Incident incident = incidentRepository.findOne(1L);
+        IncidentDTO result = incidentMapper.toDto(incident);
+        return result;
+        
+    }
+    
     /**
      * Save a incident.
      *
@@ -48,6 +65,10 @@ public class IncidentServiceImpl implements IncidentService {
     @Override
     public IncidentDTO save(IncidentDTO incidentDTO) {
         log.debug("Request to save Incident : {}", incidentDTO);
+    
+        Optional<String> currentUserId = SecurityUtils.getCurrentUserLogin();
+        
+        
         Incident incident = incidentMapper.toEntity(incidentDTO);
         incident = incidentRepository.save(incident);
         IncidentDTO result = incidentMapper.toDto(incident);
