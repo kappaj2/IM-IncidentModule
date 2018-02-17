@@ -20,8 +20,7 @@ public enum IncidentPriority {
     SAFETY("Safety", "Safety Related"),
     HIGH("High", "High Priority"),
     MEDIUM("Medium", "Medium Priority"),
-    LOW("Low", "Low Priority"),
-    MAINTENANCE("Maintenace", "Next Maintenance Schedule");
+    LOW("Low", "Low Priority");
     
     private String priorityCode;
     private String priorityDescription;
