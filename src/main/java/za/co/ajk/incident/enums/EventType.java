@@ -14,10 +14,10 @@ import za.co.ajk.incident.enums.enumwrappers.EventTypeSerializer;
 @JsonSerialize(using = EventTypeSerializer.class)
 public enum EventType {
     
-    START_EVENT("START", "Start a new event"),
-    UPDATE_EVENT("UPDATE", "Update an existing event"),
+    OPEN_INCIDENT("OPEN", "Start a new incident"),
+    UPDATE_EVENT("UPDATE", "Update an existing incident"),
     UPDATE_PRIORITY("UPDATE_PRIORITY", "Update incident priority"),
-    CLOSE_EVENT("CLOSE", "Close the event");
+    CLOSE_INCIDENT("CLOSE", "Close the incident");
     
     private String eventTypeCode;
     private String eventDescription;
