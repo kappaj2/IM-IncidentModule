@@ -29,5 +29,5 @@ public class CreateNewIncidentDTO implements Serializable {
     private Long companyId;
     
     @NotNull
-    private Integer operatorId;
+    private String operator;
 }
