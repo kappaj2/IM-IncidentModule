@@ -59,16 +59,16 @@ public class BaseDataPopulator implements CommandLineRunner {
     private Region kzn = new Region().regionCode("REG2").regionName("Kwazulu Natal").country(southAfrica);
     private Region westernCape = new Region().regionCode("REG3").regionName("Western Cape").country(southAfrica);
     
-    private Company ca1_1 = new Company().companyCode("CA1").companyName("Company One").branchCode("BC1").region(westernCape);
-    private Company ca1_2 = new Company().companyCode("CA1").companyName("Company One").branchCode("BC2").region(westernCape);
-    private Company ca1_3 = new Company().companyCode("CA1").companyName("Company One").branchCode("BC3").region(westernCape);
+    private Company ca1_1 = new Company().name("Company One").branchCode("BC1").region(westernCape);
+    private Company ca1_2 = new Company().name("Company One").branchCode("BC2").region(westernCape);
+    private Company ca1_3 = new Company().name("Company One").branchCode("BC3").region(westernCape);
     
-    private Company ca2 = new Company().companyCode("CA2").companyName("Company Two").region(gauteng);
-    private Company ca3 = new Company().companyCode("CA3").companyName("Company Three").region(gauteng);
-    private Company ca4 = new Company().companyCode("CA4").companyName("Company Four").region(kzn);
-    private Company ca5 = new Company().companyCode("CA5").companyName("Company Five").region(kzn);
-    private Company ca6 = new Company().companyCode("CA6").companyName("Company Six");
-    private Company ca7 = new Company().companyCode("CA7").companyName("Company Seven");
+    private Company ca2 = new Company().name("Company Two").region(gauteng);
+    private Company ca3 = new Company().name("Company Three").region(gauteng);
+    private Company ca4 = new Company().name("Company Four").region(kzn);
+    private Company ca5 = new Company().name("Company Five").region(kzn);
+    private Company ca6 = new Company().name("Company Six");
+    private Company ca7 = new Company().name("Company Seven");
     
     @Override
     public void run(String... args) throws Exception {
