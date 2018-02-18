@@ -1,13 +1,22 @@
 package za.co.ajk.incident.service;
 
-import za.co.ajk.incident.service.dto.IncidentDTO;
 import java.util.List;
+
+import za.co.ajk.incident.service.dto.CreateNewIncidentDTO;
+import za.co.ajk.incident.service.dto.IncidentDTO;
 
 /**
  * Service Interface for managing Incident.
  */
 public interface IncidentService {
-
+    
+    /**
+     * Create a new incident.
+     * @param createNewIncidentDTO
+     * @return
+     */
+    IncidentDTO createNewIncident(CreateNewIncidentDTO createNewIncidentDTO);
+    
     /**
      * Save a incident.
      *
@@ -42,7 +51,7 @@ public interface IncidentService {
      * Search for the incident corresponding to the query.
      *
      * @param query the query of the search
-     * 
+     *
      * @return the list of entities
      */
     List<IncidentDTO> search(String query);

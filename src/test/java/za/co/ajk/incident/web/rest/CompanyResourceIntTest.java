@@ -42,11 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = IncidentModuleApp.class)
 public class CompanyResourceIntTest {
 
-    private static final String DEFAULT_COMPANY_CODE = "AAAAAAAAAA";
-    private static final String UPDATED_COMPANY_CODE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_COMPANY_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_COMPANY_NAME = "BBBBBBBBBB";
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
 
     private static final String DEFAULT_BRANCH_CODE = "AAAAAAAAAA";
     private static final String UPDATED_BRANCH_CODE = "BBBBBBBBBB";
@@ -98,8 +95,7 @@ public class CompanyResourceIntTest {
      */
     public static Company createEntity(EntityManager em) {
         Company company = new Company()
-            .companyCode(DEFAULT_COMPANY_CODE)
-            .companyName(DEFAULT_COMPANY_NAME)
+            .name(DEFAULT_NAME)
             .branchCode(DEFAULT_BRANCH_CODE);
         return company;
     }
@@ -126,8 +122,7 @@ public class CompanyResourceIntTest {
         List<Company> companyList = companyRepository.findAll();
         assertThat(companyList).hasSize(databaseSizeBeforeCreate + 1);
         Company testCompany = companyList.get(companyList.size() - 1);
-        assertThat(testCompany.getCompanyCode()).isEqualTo(DEFAULT_COMPANY_CODE);
-        assertThat(testCompany.getCompanyName()).isEqualTo(DEFAULT_COMPANY_NAME);
+        assertThat(testCompany.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCompany.getBranchCode()).isEqualTo(DEFAULT_BRANCH_CODE);
 
         // Validate the Company in Elasticsearch
@@ -157,29 +152,10 @@ public class CompanyResourceIntTest {
 
     @Test
     @Transactional
-    public void checkCompanyCodeIsRequired() throws Exception {
+    public void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = companyRepository.findAll().size();
         // set the field null
-        company.setCompanyCode(null);
-
-        // Create the Company, which fails.
-        CompanyDTO companyDTO = companyMapper.toDto(company);
-
-        restCompanyMockMvc.perform(post("/api/companies")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(companyDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Company> companyList = companyRepository.findAll();
-        assertThat(companyList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkCompanyNameIsRequired() throws Exception {
-        int databaseSizeBeforeTest = companyRepository.findAll().size();
-        // set the field null
-        company.setCompanyName(null);
+        company.setName(null);
 
         // Create the Company, which fails.
         CompanyDTO companyDTO = companyMapper.toDto(company);
@@ -204,8 +180,7 @@ public class CompanyResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(company.getId().intValue())))
-            .andExpect(jsonPath("$.[*].companyCode").value(hasItem(DEFAULT_COMPANY_CODE.toString())))
-            .andExpect(jsonPath("$.[*].companyName").value(hasItem(DEFAULT_COMPANY_NAME.toString())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].branchCode").value(hasItem(DEFAULT_BRANCH_CODE.toString())));
     }
 
@@ -220,8 +195,7 @@ public class CompanyResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(company.getId().intValue()))
-            .andExpect(jsonPath("$.companyCode").value(DEFAULT_COMPANY_CODE.toString()))
-            .andExpect(jsonPath("$.companyName").value(DEFAULT_COMPANY_NAME.toString()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.branchCode").value(DEFAULT_BRANCH_CODE.toString()));
     }
 
@@ -246,8 +220,7 @@ public class CompanyResourceIntTest {
         // Disconnect from session so that the updates on updatedCompany are not directly saved in db
         em.detach(updatedCompany);
         updatedCompany
-            .companyCode(UPDATED_COMPANY_CODE)
-            .companyName(UPDATED_COMPANY_NAME)
+            .name(UPDATED_NAME)
             .branchCode(UPDATED_BRANCH_CODE);
         CompanyDTO companyDTO = companyMapper.toDto(updatedCompany);
 
@@ -260,8 +233,7 @@ public class CompanyResourceIntTest {
         List<Company> companyList = companyRepository.findAll();
         assertThat(companyList).hasSize(databaseSizeBeforeUpdate);
         Company testCompany = companyList.get(companyList.size() - 1);
-        assertThat(testCompany.getCompanyCode()).isEqualTo(UPDATED_COMPANY_CODE);
-        assertThat(testCompany.getCompanyName()).isEqualTo(UPDATED_COMPANY_NAME);
+        assertThat(testCompany.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCompany.getBranchCode()).isEqualTo(UPDATED_BRANCH_CODE);
 
         // Validate the Company in Elasticsearch
@@ -322,8 +294,7 @@ public class CompanyResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(company.getId().intValue())))
-            .andExpect(jsonPath("$.[*].companyCode").value(hasItem(DEFAULT_COMPANY_CODE.toString())))
-            .andExpect(jsonPath("$.[*].companyName").value(hasItem(DEFAULT_COMPANY_NAME.toString())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].branchCode").value(hasItem(DEFAULT_BRANCH_CODE.toString())));
     }
 

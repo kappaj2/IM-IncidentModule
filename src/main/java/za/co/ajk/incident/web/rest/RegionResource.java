@@ -1,25 +1,33 @@
 package za.co.ajk.incident.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import za.co.ajk.incident.service.RegionService;
-import za.co.ajk.incident.web.rest.errors.BadRequestAlertException;
-import za.co.ajk.incident.web.rest.util.HeaderUtil;
-import za.co.ajk.incident.service.dto.RegionDTO;
-import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.codahale.metrics.annotation.Timed;
+import io.github.jhipster.web.util.ResponseUtil;
+import za.co.ajk.incident.service.RegionService;
+import za.co.ajk.incident.service.TestService;
+import za.co.ajk.incident.service.dto.RegionDTO;
+import za.co.ajk.incident.web.rest.errors.BadRequestAlertException;
+import za.co.ajk.incident.web.rest.util.HeaderUtil;
 
 /**
  * REST controller for managing Region.
@@ -33,7 +41,10 @@ public class RegionResource {
     private static final String ENTITY_NAME = "region";
 
     private final RegionService regionService;
-
+    
+    @Autowired
+    private TestService testService;
+    
     public RegionResource(RegionService regionService) {
         this.regionService = regionService;
     }
@@ -89,6 +100,9 @@ public class RegionResource {
     @Timed
     public List<RegionDTO> getAllRegions() {
         log.debug("REST request to get all Regions");
+
+        testService.getUserIdForCurrentUSer();
+        
         return regionService.findAll();
         }
 
