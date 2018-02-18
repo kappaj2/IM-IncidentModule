@@ -14,8 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import za.co.ajk.incident.domain.Company;
 import za.co.ajk.incident.domain.Incident;
+import za.co.ajk.incident.domain.IncidentActivity;
+import za.co.ajk.incident.enums.EventType;
+import za.co.ajk.incident.enums.IncidentStatusType;
 import za.co.ajk.incident.repository.CompanyRepository;
 import za.co.ajk.incident.repository.CountryRepository;
+import za.co.ajk.incident.repository.IncidentActivityRepository;
 import za.co.ajk.incident.repository.IncidentRepository;
 import za.co.ajk.incident.repository.RegionRepository;
 import za.co.ajk.incident.repository.search.IncidentSearchRepository;
@@ -28,23 +32,27 @@ import za.co.ajk.incident.service.mapper.IncidentMapper;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
+
 /**
  * Service Implementation for managing Incident.
  */
 @Service
 @Transactional
 public class IncidentServiceImpl implements IncidentService {
-
+    
     private final Logger log = LoggerFactory.getLogger(IncidentServiceImpl.class);
-
+    
     private final IncidentRepository incidentRepository;
-
+    
     private final IncidentMapper incidentMapper;
-
+    
     private final IncidentSearchRepository incidentSearchRepository;
-
+    
     @Autowired
-    private CountryService  countryService;
+    private IncidentActivityRepository incidentActivityRepository;
+    
+    @Autowired
+    private CountryService countryService;
     
     @Autowired
     private CountryRepository countryRepository;
@@ -55,23 +63,30 @@ public class IncidentServiceImpl implements IncidentService {
     @Autowired
     private CompanyRepository companyRepository;
     
-    
-    public IncidentServiceImpl(IncidentRepository incidentRepository, IncidentMapper incidentMapper, IncidentSearchRepository incidentSearchRepository) {
+    public IncidentServiceImpl(IncidentRepository incidentRepository,
+                               IncidentMapper incidentMapper,
+                               IncidentSearchRepository incidentSearchRepository) {
         this.incidentRepository = incidentRepository;
         this.incidentMapper = incidentMapper;
         this.incidentSearchRepository = incidentSearchRepository;
     }
     
+    /**
+     * Create a new incident for the specific company. Retrieve the last incident number for this company and increment. Each company has a sequence
+     * of incidents.
+     *
+     * @param createNewIncidentDTO
+     * @return
+     */
     @Override
-    public IncidentDTO createNewIncident(CreateNewIncidentDTO createNewIncidentDTO){
+    public IncidentDTO createNewIncident(CreateNewIncidentDTO createNewIncidentDTO) {
         
-    
         // Find the company using the company id provided.
         Company company = companyRepository.getOne(createNewIncidentDTO.getCompanyId());
         Long companyId = company.getId();
-
+        
         Integer lastIncidentNumber = incidentRepository.getMaxIncidentNumberForCompany(companyId);
-    
+        
         lastIncidentNumber = lastIncidentNumber == null ? 1 : ++lastIncidentNumber;
         
         Incident incident = new Incident();
@@ -86,13 +101,34 @@ public class IncidentServiceImpl implements IncidentService {
         incident.setIncidentTypeCode(createNewIncidentDTO.getIncidentTypeCode());
         incident.setDateUpdated(Instant.now());
         incident.setUpdatedBy(SecurityUtils.getCurrentUserLogin().get());
+        
+        /*
+            Create the incident activity entry.
+         */
+        Integer incidentActivityEventNumber = incidentActivityRepository.getMaxIncidentEventNumberForIncident(incident.getId());
     
+        incidentActivityEventNumber = incidentActivityEventNumber == null ? 1 : ++incidentActivityEventNumber;
+        
+        IncidentActivity incidentActivity = new IncidentActivity();
+        incidentActivity.setCreatedBy(SecurityUtils.getCurrentUserLogin().get());
+        incidentActivity.setDateCreated(Instant.now());
+        incidentActivity.setEventTypeCode(EventType.OPEN_INCIDENT.getEventTypeCode());
+        incidentActivity.setUpdatedStatusCode(IncidentStatusType.OPENED.getIncidentStatusCode());
+        incidentActivity.setIncident(incident);
+        incidentActivity.setIncidentComment("Incident created");
+        incidentActivity.setDateUpdated(Instant.now());
+        incidentActivity.setUpdatedBy(SecurityUtils.getCurrentUserLogin().get());
+        incidentActivity.setEventNumber(incidentActivityEventNumber);
+        incidentActivity.setUpdatedPriorityCode(createNewIncidentDTO.getIncidentPriorityCode());
+        
         incidentRepository.save(incident);
-    
+        incidentActivityRepository.save(incidentActivity);
+        
         IncidentDTO result = incidentMapper.toDto(incident);
         incidentSearchRepository.save(incident);
         return result;
     }
+    
     /**
      * Save a incident.
      *
@@ -108,7 +144,7 @@ public class IncidentServiceImpl implements IncidentService {
         incidentSearchRepository.save(incident);
         return result;
     }
-
+    
     /**
      * Get all the incidents.
      *
@@ -122,7 +158,7 @@ public class IncidentServiceImpl implements IncidentService {
             .map(incidentMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
     }
-
+    
     /**
      * Get one incident by id.
      *
@@ -136,7 +172,7 @@ public class IncidentServiceImpl implements IncidentService {
         Incident incident = incidentRepository.findOne(id);
         return incidentMapper.toDto(incident);
     }
-
+    
     /**
      * Delete the incident by id.
      *
@@ -148,7 +184,7 @@ public class IncidentServiceImpl implements IncidentService {
         incidentRepository.delete(id);
         incidentSearchRepository.delete(id);
     }
-
+    
     /**
      * Search for the incident corresponding to the query.
      *
