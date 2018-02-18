@@ -31,7 +31,7 @@
         },
         {
             "fieldName": "addedBy",
-            "fieldType": "Integer",
+            "fieldType": "String",
             "fieldValidateRules": [
                 "required"
             ]

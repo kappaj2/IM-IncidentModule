@@ -59,24 +59,24 @@ public class Incident implements Serializable {
 
     @NotNull
     @Column(name = "created_by", nullable = false)
-    private Integer createdBy;
+    private String createdBy;
 
     @NotNull
-    @Column(name = "date_last_updated", nullable = false)
-    private Instant dateLastUpdated;
+    @Column(name = "date_updated", nullable = false)
+    private Instant dateUpdated;
 
     @NotNull
     @Column(name = "updated_by", nullable = false)
-    private Integer updatedBy;
+    private String updatedBy;
 
-    @Column(name = "indicent_resolution")
-    private String indicentResolution;
+    @Column(name = "incident_resolution")
+    private String incidentResolution;
 
     @Column(name = "date_closed")
     private Instant dateClosed;
 
     @Column(name = "closed_by")
-    private Integer closedBy;
+    private String closedBy;
 
     @OneToMany(mappedBy = "incident")
     @JsonIgnore
@@ -186,56 +186,56 @@ public class Incident implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public Integer getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public Incident createdBy(Integer createdBy) {
+    public Incident createdBy(String createdBy) {
         this.createdBy = createdBy;
         return this;
     }
 
-    public void setCreatedBy(Integer createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Instant getDateLastUpdated() {
-        return dateLastUpdated;
+    public Instant getDateUpdated() {
+        return dateUpdated;
     }
 
-    public Incident dateLastUpdated(Instant dateLastUpdated) {
-        this.dateLastUpdated = dateLastUpdated;
+    public Incident dateUpdated(Instant dateUpdated) {
+        this.dateUpdated = dateUpdated;
         return this;
     }
 
-    public void setDateLastUpdated(Instant dateLastUpdated) {
-        this.dateLastUpdated = dateLastUpdated;
+    public void setDateUpdated(Instant dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 
-    public Integer getUpdatedBy() {
+    public String getUpdatedBy() {
         return updatedBy;
     }
 
-    public Incident updatedBy(Integer updatedBy) {
+    public Incident updatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
         return this;
     }
 
-    public void setUpdatedBy(Integer updatedBy) {
+    public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
 
-    public String getIndicentResolution() {
-        return indicentResolution;
+    public String getIncidentResolution() {
+        return incidentResolution;
     }
 
-    public Incident indicentResolution(String indicentResolution) {
-        this.indicentResolution = indicentResolution;
+    public Incident incidentResolution(String incidentResolution) {
+        this.incidentResolution = incidentResolution;
         return this;
     }
 
-    public void setIndicentResolution(String indicentResolution) {
-        this.indicentResolution = indicentResolution;
+    public void setIncidentResolution(String incidentResolution) {
+        this.incidentResolution = incidentResolution;
     }
 
     public Instant getDateClosed() {
@@ -251,16 +251,16 @@ public class Incident implements Serializable {
         this.dateClosed = dateClosed;
     }
 
-    public Integer getClosedBy() {
+    public String getClosedBy() {
         return closedBy;
     }
 
-    public Incident closedBy(Integer closedBy) {
+    public Incident closedBy(String closedBy) {
         this.closedBy = closedBy;
         return this;
     }
 
-    public void setClosedBy(Integer closedBy) {
+    public void setClosedBy(String closedBy) {
         this.closedBy = closedBy;
     }
 
@@ -334,12 +334,12 @@ public class Incident implements Serializable {
             ", incidentDescription='" + getIncidentDescription() + "'" +
             ", incidentStatusCode='" + getIncidentStatusCode() + "'" +
             ", dateCreated='" + getDateCreated() + "'" +
-            ", createdBy=" + getCreatedBy() +
-            ", dateLastUpdated='" + getDateLastUpdated() + "'" +
-            ", updatedBy=" + getUpdatedBy() +
-            ", indicentResolution='" + getIndicentResolution() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", dateUpdated='" + getDateUpdated() + "'" +
+            ", updatedBy='" + getUpdatedBy() + "'" +
+            ", incidentResolution='" + getIncidentResolution() + "'" +
             ", dateClosed='" + getDateClosed() + "'" +
-            ", closedBy=" + getClosedBy() +
+            ", closedBy='" + getClosedBy() + "'" +
             "}";
     }
 }

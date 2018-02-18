@@ -39,7 +39,7 @@ public class Equipment implements Serializable {
 
     @NotNull
     @Column(name = "added_by", nullable = false)
-    private Integer addedBy;
+    private String addedBy;
 
     @OneToMany(mappedBy = "equipment")
     @JsonIgnore
@@ -84,16 +84,16 @@ public class Equipment implements Serializable {
         this.dateAdded = dateAdded;
     }
 
-    public Integer getAddedBy() {
+    public String getAddedBy() {
         return addedBy;
     }
 
-    public Equipment addedBy(Integer addedBy) {
+    public Equipment addedBy(String addedBy) {
         this.addedBy = addedBy;
         return this;
     }
 
-    public void setAddedBy(Integer addedBy) {
+    public void setAddedBy(String addedBy) {
         this.addedBy = addedBy;
     }
 
@@ -162,7 +162,7 @@ public class Equipment implements Serializable {
             "id=" + getId() +
             ", equipmentId=" + getEquipmentId() +
             ", dateAdded='" + getDateAdded() + "'" +
-            ", addedBy=" + getAddedBy() +
+            ", addedBy='" + getAddedBy() + "'" +
             "}";
     }
 }

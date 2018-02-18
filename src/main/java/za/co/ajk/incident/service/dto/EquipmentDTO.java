@@ -22,7 +22,7 @@ public class EquipmentDTO implements Serializable {
     private Instant dateAdded;
 
     @NotNull
-    private Integer addedBy;
+    private String addedBy;
 
     private Long companyId;
 
@@ -50,11 +50,11 @@ public class EquipmentDTO implements Serializable {
         this.dateAdded = dateAdded;
     }
 
-    public Integer getAddedBy() {
+    public String getAddedBy() {
         return addedBy;
     }
 
-    public void setAddedBy(Integer addedBy) {
+    public void setAddedBy(String addedBy) {
         this.addedBy = addedBy;
     }
 
@@ -93,7 +93,7 @@ public class EquipmentDTO implements Serializable {
             "id=" + getId() +
             ", equipmentId=" + getEquipmentId() +
             ", dateAdded='" + getDateAdded() + "'" +
-            ", addedBy=" + getAddedBy() +
+            ", addedBy='" + getAddedBy() + "'" +
             "}";
     }
 }

@@ -46,7 +46,7 @@ public class EquipmentActivity implements Serializable {
     private Instant dateCreated;
 
     @Column(name = "created_by")
-    private Integer createdBy;
+    private String createdBy;
 
     @ManyToOne
     private IncidentActivity incidentActivity;
@@ -128,16 +128,16 @@ public class EquipmentActivity implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public Integer getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public EquipmentActivity createdBy(Integer createdBy) {
+    public EquipmentActivity createdBy(String createdBy) {
         this.createdBy = createdBy;
         return this;
     }
 
-    public void setCreatedBy(Integer createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -197,7 +197,7 @@ public class EquipmentActivity implements Serializable {
             ", equipmentActionCode='" + getEquipmentActionCode() + "'" +
             ", activityComment='" + getActivityComment() + "'" +
             ", dateCreated='" + getDateCreated() + "'" +
-            ", createdBy=" + getCreatedBy() +
+            ", createdBy='" + getCreatedBy() + "'" +
             "}";
     }
 }

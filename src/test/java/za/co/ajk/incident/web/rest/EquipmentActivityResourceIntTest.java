@@ -59,8 +59,8 @@ public class EquipmentActivityResourceIntTest {
     private static final Instant DEFAULT_DATE_CREATED = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE_CREATED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final Integer DEFAULT_CREATED_BY = 1;
-    private static final Integer UPDATED_CREATED_BY = 2;
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
 
     @Autowired
     private EquipmentActivityRepository equipmentActivityRepository;
@@ -264,7 +264,7 @@ public class EquipmentActivityResourceIntTest {
             .andExpect(jsonPath("$.[*].equipmentActionCode").value(hasItem(DEFAULT_EQUIPMENT_ACTION_CODE.toString())))
             .andExpect(jsonPath("$.[*].activityComment").value(hasItem(DEFAULT_ACTIVITY_COMMENT.toString())))
             .andExpect(jsonPath("$.[*].dateCreated").value(hasItem(DEFAULT_DATE_CREATED.toString())))
-            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)));
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())));
     }
 
     @Test
@@ -283,7 +283,7 @@ public class EquipmentActivityResourceIntTest {
             .andExpect(jsonPath("$.equipmentActionCode").value(DEFAULT_EQUIPMENT_ACTION_CODE.toString()))
             .andExpect(jsonPath("$.activityComment").value(DEFAULT_ACTIVITY_COMMENT.toString()))
             .andExpect(jsonPath("$.dateCreated").value(DEFAULT_DATE_CREATED.toString()))
-            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY));
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.toString()));
     }
 
     @Test
@@ -394,7 +394,7 @@ public class EquipmentActivityResourceIntTest {
             .andExpect(jsonPath("$.[*].equipmentActionCode").value(hasItem(DEFAULT_EQUIPMENT_ACTION_CODE.toString())))
             .andExpect(jsonPath("$.[*].activityComment").value(hasItem(DEFAULT_ACTIVITY_COMMENT.toString())))
             .andExpect(jsonPath("$.[*].dateCreated").value(hasItem(DEFAULT_DATE_CREATED.toString())))
-            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)));
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())));
     }
 
     @Test

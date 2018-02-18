@@ -50,19 +50,19 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="created_by" type="integer">
+            <column name="created_by" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
 
-            <column name="date_last_updated" type="timestamp">
+            <column name="date_updated" type="timestamp">
                 <constraints nullable="false" />
             </column>
 
-            <column name="updated_by" type="integer">
+            <column name="updated_by" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
 
-            <column name="indicent_resolution" type="varchar(255)">
+            <column name="incident_resolution" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
@@ -70,7 +70,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="closed_by" type="integer">
+            <column name="closed_by" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
@@ -81,7 +81,7 @@
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         <dropDefaultValue tableName="incident" columnName="date_created" columnDataType="datetime"/>
-        <dropDefaultValue tableName="incident" columnName="date_last_updated" columnDataType="datetime"/>
+        <dropDefaultValue tableName="incident" columnName="date_updated" columnDataType="datetime"/>
         <dropDefaultValue tableName="incident" columnName="date_closed" columnDataType="datetime"/>
         
     </changeSet>

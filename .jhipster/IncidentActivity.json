@@ -56,15 +56,15 @@
         },
         {
             "fieldName": "createdBy",
-            "fieldType": "Integer"
+            "fieldType": "String"
         },
         {
-            "fieldName": "dateLastUpdated",
+            "fieldName": "dateUpdated",
             "fieldType": "Instant"
         },
         {
             "fieldName": "updatedBy",
-            "fieldType": "Instant"
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20180215172507",

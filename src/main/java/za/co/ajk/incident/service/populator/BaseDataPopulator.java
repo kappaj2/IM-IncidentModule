@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import za.co.ajk.incident.domain.Company;
@@ -28,6 +29,7 @@ import za.co.ajk.incident.service.dto.RegionDTO;
 /**
  * Class to load basic data for unit testing and QA.
  */
+@Profile("dev")
 @Service
 public class BaseDataPopulator implements CommandLineRunner {
     
@@ -126,38 +128,38 @@ public class BaseDataPopulator implements CommandLineRunner {
                 .company(ca1_1)
                 .equipmentId(Integer.valueOf(1))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             equipmentRepository.save(new Equipment()
                 .company(ca1_1)
                 .equipmentId(Integer.valueOf(2))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             equipmentRepository.save(new Equipment()
                 .company(ca1_2)
                 .equipmentId(Integer.valueOf(3))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             equipmentRepository.save(new Equipment()
                 .company(ca1_2)
                 .equipmentId(Integer.valueOf(4))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             
             equipmentRepository.save(new Equipment()
                 .company(ca2)
                 .equipmentId(Integer.valueOf(21))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             equipmentRepository.save(new Equipment()
                 .company(ca2)
                 .equipmentId(Integer.valueOf(22))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             equipmentRepository.save(new Equipment()
                 .company(ca2)
                 .equipmentId(Integer.valueOf(23))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             
             equipmentRepository.findAll().stream().forEach(System.out::print);
         }
