@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,12 +44,12 @@ public class Company implements Serializable {
     @Column(name = "branch_code")
     private String branchCode;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Incident> incidents = new HashSet<>();
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Equipment> equipment = new HashSet<>();

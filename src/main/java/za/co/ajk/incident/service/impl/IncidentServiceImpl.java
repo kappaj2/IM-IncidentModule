@@ -1,22 +1,32 @@
 package za.co.ajk.incident.service.impl;
 
-import za.co.ajk.incident.service.IncidentService;
-import za.co.ajk.incident.domain.Incident;
-import za.co.ajk.incident.repository.IncidentRepository;
-import za.co.ajk.incident.repository.search.IncidentSearchRepository;
-import za.co.ajk.incident.service.dto.IncidentDTO;
-import za.co.ajk.incident.service.mapper.IncidentMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import za.co.ajk.incident.domain.Company;
+import za.co.ajk.incident.domain.Incident;
+import za.co.ajk.incident.repository.CompanyRepository;
+import za.co.ajk.incident.repository.CountryRepository;
+import za.co.ajk.incident.repository.IncidentRepository;
+import za.co.ajk.incident.repository.RegionRepository;
+import za.co.ajk.incident.repository.search.IncidentSearchRepository;
+import za.co.ajk.incident.security.SecurityUtils;
+import za.co.ajk.incident.service.CountryService;
+import za.co.ajk.incident.service.IncidentService;
+import za.co.ajk.incident.service.dto.CreateNewIncidentDTO;
+import za.co.ajk.incident.service.dto.IncidentDTO;
+import za.co.ajk.incident.service.mapper.IncidentMapper;
+
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Incident.
@@ -33,12 +43,56 @@ public class IncidentServiceImpl implements IncidentService {
 
     private final IncidentSearchRepository incidentSearchRepository;
 
+    @Autowired
+    private CountryService  countryService;
+    
+    @Autowired
+    private CountryRepository countryRepository;
+    
+    @Autowired
+    private RegionRepository regionRepository;
+    
+    @Autowired
+    private CompanyRepository companyRepository;
+    
+    
     public IncidentServiceImpl(IncidentRepository incidentRepository, IncidentMapper incidentMapper, IncidentSearchRepository incidentSearchRepository) {
         this.incidentRepository = incidentRepository;
         this.incidentMapper = incidentMapper;
         this.incidentSearchRepository = incidentSearchRepository;
     }
+    
+    @Override
+    public IncidentDTO createNewIncident(CreateNewIncidentDTO createNewIncidentDTO){
+        
+    
+        // Find the company using the company id provided.
+        Company company = companyRepository.getOne(createNewIncidentDTO.getCompanyId());
+        Long companyId = company.getId();
 
+        Integer lastIncidentNumber = incidentRepository.getMaxIncidentNumberForCompany(companyId);
+    
+        lastIncidentNumber = lastIncidentNumber == null ? 1 : ++lastIncidentNumber;
+        
+        Incident incident = new Incident();
+        incident.setIncidentNumber(lastIncidentNumber);
+        incident.setCompany(company);
+        incident.setCreatedBy(SecurityUtils.getCurrentUserLogin().get());
+        incident.setDateCreated(Instant.now());
+        incident.setIncidentDescription(createNewIncidentDTO.getIncidentDescription());
+        incident.setIncidentHeader(createNewIncidentDTO.getIncidentHeader());
+        incident.setIncidentPriorityCode(createNewIncidentDTO.getIncidentPriorityCode());
+        incident.setIncidentStatusCode(createNewIncidentDTO.getIncidentStatusCode());
+        incident.setIncidentTypeCode(createNewIncidentDTO.getIncidentTypeCode());
+        incident.setDateUpdated(Instant.now());
+        incident.setUpdatedBy(SecurityUtils.getCurrentUserLogin().get());
+    
+        incidentRepository.save(incident);
+    
+        IncidentDTO result = incidentMapper.toDto(incident);
+        incidentSearchRepository.save(incident);
+        return result;
+    }
     /**
      * Save a incident.
      *

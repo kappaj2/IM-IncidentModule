@@ -1,18 +1,27 @@
 package za.co.ajk.incident.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * A Incident.
@@ -78,7 +87,7 @@ public class Incident implements Serializable {
     @Column(name = "closed_by")
     private String closedBy;
 
-    @OneToMany(mappedBy = "incident")
+    @OneToMany(mappedBy = "incident",fetch = FetchType.LAZY)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<IncidentActivity> incidentActivities = new HashSet<>();

@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import za.co.ajk.incident.service.IncidentService;
+import za.co.ajk.incident.service.dto.CreateNewIncidentDTO;
 import za.co.ajk.incident.service.dto.IncidentDTO;
-import za.co.ajk.incident.web.rest.errors.BadRequestAlertException;
 import za.co.ajk.incident.web.rest.util.HeaderUtil;
 
 /**
@@ -43,26 +43,42 @@ public class IncidentResource {
     public IncidentResource(IncidentService incidentService) {
         this.incidentService = incidentService;
     }
-
+    
     /**
-     * POST  /incidents : Create a new incident.
-     *
-     * @param incidentDTO the incidentDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new incidentDTO, or with status 400 (Bad Request) if the incident has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * Create a new Incident.
+     * @param createNewIncidentDTO
+     * @return
+     * @throws URISyntaxException
      */
     @PostMapping("/incidents")
     @Timed
-    public ResponseEntity<IncidentDTO> createIncident(@Valid @RequestBody IncidentDTO incidentDTO) throws URISyntaxException {
-        log.debug("REST request to save Incident : {}", incidentDTO);
-        if (incidentDTO.getId() != null) {
-            throw new BadRequestAlertException("A new incident cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        IncidentDTO result = incidentService.save(incidentDTO);
+    public ResponseEntity<IncidentDTO> createNewIncident(@Valid @RequestBody CreateNewIncidentDTO createNewIncidentDTO) throws
+                                                                                                 URISyntaxException {
+        IncidentDTO result = incidentService.createNewIncident(createNewIncidentDTO);
         return ResponseEntity.created(new URI("/api/incidents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+    
+//    /**
+//     * POST  /incidents : Create a new incident.
+//     *
+//     * @param incidentDTO the incidentDTO to create
+//     * @return the ResponseEntity with status 201 (Created) and with body the new incidentDTO, or with status 400 (Bad Request) if the incident has already an ID
+//     * @throws URISyntaxException if the Location URI syntax is incorrect
+//     */
+//    @PostMapping("/incidents")
+//    @Timed
+//    public ResponseEntity<IncidentDTO> createIncident(@Valid @RequestBody IncidentDTO incidentDTO) throws URISyntaxException {
+//        log.debug("REST request to save Incident : {}", incidentDTO);
+//        if (incidentDTO.getId() != null) {
+//            throw new BadRequestAlertException("A new incident cannot already have an ID", ENTITY_NAME, "idexists");
+//        }
+//        IncidentDTO result = incidentService.save(incidentDTO);
+//        return ResponseEntity.created(new URI("/api/incidents/" + result.getId()))
+//            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+//            .body(result);
+//    }
 
     /**
      * PUT  /incidents : Updates an existing incident.
@@ -77,9 +93,9 @@ public class IncidentResource {
     @Timed
     public ResponseEntity<IncidentDTO> updateIncident(@Valid @RequestBody IncidentDTO incidentDTO) throws URISyntaxException {
         log.debug("REST request to update Incident : {}", incidentDTO);
-        if (incidentDTO.getId() == null) {
-            return createIncident(incidentDTO);
-        }
+//        if (incidentDTO.getId() == null) {
+//            return createIncident(incidentDTO);
+//        }
         IncidentDTO result = incidentService.save(incidentDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, incidentDTO.getId().toString()))
