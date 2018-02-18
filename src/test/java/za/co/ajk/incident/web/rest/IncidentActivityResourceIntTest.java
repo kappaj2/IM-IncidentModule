@@ -62,14 +62,14 @@ public class IncidentActivityResourceIntTest {
     private static final Instant DEFAULT_DATE_CREATED = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE_CREATED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final Integer DEFAULT_CREATED_BY = 1;
-    private static final Integer UPDATED_CREATED_BY = 2;
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
 
-    private static final Instant DEFAULT_DATE_LAST_UPDATED = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_DATE_LAST_UPDATED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final Instant DEFAULT_DATE_UPDATED = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_DATE_UPDATED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final Instant DEFAULT_UPDATED_BY = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_UPDATED_BY = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final String DEFAULT_UPDATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_UPDATED_BY = "BBBBBBBBBB";
 
     @Autowired
     private IncidentActivityRepository incidentActivityRepository;
@@ -125,7 +125,7 @@ public class IncidentActivityResourceIntTest {
             .incidentComment(DEFAULT_INCIDENT_COMMENT)
             .dateCreated(DEFAULT_DATE_CREATED)
             .createdBy(DEFAULT_CREATED_BY)
-            .dateLastUpdated(DEFAULT_DATE_LAST_UPDATED)
+            .dateUpdated(DEFAULT_DATE_UPDATED)
             .updatedBy(DEFAULT_UPDATED_BY);
         return incidentActivity;
     }
@@ -159,7 +159,7 @@ public class IncidentActivityResourceIntTest {
         assertThat(testIncidentActivity.getIncidentComment()).isEqualTo(DEFAULT_INCIDENT_COMMENT);
         assertThat(testIncidentActivity.getDateCreated()).isEqualTo(DEFAULT_DATE_CREATED);
         assertThat(testIncidentActivity.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testIncidentActivity.getDateLastUpdated()).isEqualTo(DEFAULT_DATE_LAST_UPDATED);
+        assertThat(testIncidentActivity.getDateUpdated()).isEqualTo(DEFAULT_DATE_UPDATED);
         assertThat(testIncidentActivity.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
 
         // Validate the IncidentActivity in Elasticsearch
@@ -299,8 +299,8 @@ public class IncidentActivityResourceIntTest {
             .andExpect(jsonPath("$.[*].updatedStatusCode").value(hasItem(DEFAULT_UPDATED_STATUS_CODE.toString())))
             .andExpect(jsonPath("$.[*].incidentComment").value(hasItem(DEFAULT_INCIDENT_COMMENT.toString())))
             .andExpect(jsonPath("$.[*].dateCreated").value(hasItem(DEFAULT_DATE_CREATED.toString())))
-            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
-            .andExpect(jsonPath("$.[*].dateLastUpdated").value(hasItem(DEFAULT_DATE_LAST_UPDATED.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())))
+            .andExpect(jsonPath("$.[*].dateUpdated").value(hasItem(DEFAULT_DATE_UPDATED.toString())))
             .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY.toString())));
     }
 
@@ -321,8 +321,8 @@ public class IncidentActivityResourceIntTest {
             .andExpect(jsonPath("$.updatedStatusCode").value(DEFAULT_UPDATED_STATUS_CODE.toString()))
             .andExpect(jsonPath("$.incidentComment").value(DEFAULT_INCIDENT_COMMENT.toString()))
             .andExpect(jsonPath("$.dateCreated").value(DEFAULT_DATE_CREATED.toString()))
-            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
-            .andExpect(jsonPath("$.dateLastUpdated").value(DEFAULT_DATE_LAST_UPDATED.toString()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.toString()))
+            .andExpect(jsonPath("$.dateUpdated").value(DEFAULT_DATE_UPDATED.toString()))
             .andExpect(jsonPath("$.updatedBy").value(DEFAULT_UPDATED_BY.toString()));
     }
 
@@ -354,7 +354,7 @@ public class IncidentActivityResourceIntTest {
             .incidentComment(UPDATED_INCIDENT_COMMENT)
             .dateCreated(UPDATED_DATE_CREATED)
             .createdBy(UPDATED_CREATED_BY)
-            .dateLastUpdated(UPDATED_DATE_LAST_UPDATED)
+            .dateUpdated(UPDATED_DATE_UPDATED)
             .updatedBy(UPDATED_UPDATED_BY);
         IncidentActivityDTO incidentActivityDTO = incidentActivityMapper.toDto(updatedIncidentActivity);
 
@@ -374,7 +374,7 @@ public class IncidentActivityResourceIntTest {
         assertThat(testIncidentActivity.getIncidentComment()).isEqualTo(UPDATED_INCIDENT_COMMENT);
         assertThat(testIncidentActivity.getDateCreated()).isEqualTo(UPDATED_DATE_CREATED);
         assertThat(testIncidentActivity.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testIncidentActivity.getDateLastUpdated()).isEqualTo(UPDATED_DATE_LAST_UPDATED);
+        assertThat(testIncidentActivity.getDateUpdated()).isEqualTo(UPDATED_DATE_UPDATED);
         assertThat(testIncidentActivity.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
 
         // Validate the IncidentActivity in Elasticsearch
@@ -441,8 +441,8 @@ public class IncidentActivityResourceIntTest {
             .andExpect(jsonPath("$.[*].updatedStatusCode").value(hasItem(DEFAULT_UPDATED_STATUS_CODE.toString())))
             .andExpect(jsonPath("$.[*].incidentComment").value(hasItem(DEFAULT_INCIDENT_COMMENT.toString())))
             .andExpect(jsonPath("$.[*].dateCreated").value(hasItem(DEFAULT_DATE_CREATED.toString())))
-            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
-            .andExpect(jsonPath("$.[*].dateLastUpdated").value(hasItem(DEFAULT_DATE_LAST_UPDATED.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())))
+            .andExpect(jsonPath("$.[*].dateUpdated").value(hasItem(DEFAULT_DATE_UPDATED.toString())))
             .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY.toString())));
     }
 

@@ -32,11 +32,11 @@ public class IncidentActivityDTO implements Serializable {
 
     private Instant dateCreated;
 
-    private Integer createdBy;
+    private String createdBy;
 
-    private Instant dateLastUpdated;
+    private Instant dateUpdated;
 
-    private Instant updatedBy;
+    private String updatedBy;
 
     private Long incidentId;
 
@@ -96,27 +96,27 @@ public class IncidentActivityDTO implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public Integer getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Integer createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Instant getDateLastUpdated() {
-        return dateLastUpdated;
+    public Instant getDateUpdated() {
+        return dateUpdated;
     }
 
-    public void setDateLastUpdated(Instant dateLastUpdated) {
-        this.dateLastUpdated = dateLastUpdated;
+    public void setDateUpdated(Instant dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 
-    public Instant getUpdatedBy() {
+    public String getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(Instant updatedBy) {
+    public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
 
@@ -159,8 +159,8 @@ public class IncidentActivityDTO implements Serializable {
             ", updatedStatusCode='" + getUpdatedStatusCode() + "'" +
             ", incidentComment='" + getIncidentComment() + "'" +
             ", dateCreated='" + getDateCreated() + "'" +
-            ", createdBy=" + getCreatedBy() +
-            ", dateLastUpdated='" + getDateLastUpdated() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", dateUpdated='" + getDateUpdated() + "'" +
             ", updatedBy='" + getUpdatedBy() + "'" +
             "}";
     }

@@ -53,13 +53,13 @@ public class IncidentActivity implements Serializable {
     private Instant dateCreated;
 
     @Column(name = "created_by")
-    private Integer createdBy;
+    private String createdBy;
 
-    @Column(name = "date_last_updated")
-    private Instant dateLastUpdated;
+    @Column(name = "date_updated")
+    private Instant dateUpdated;
 
     @Column(name = "updated_by")
-    private Instant updatedBy;
+    private String updatedBy;
 
     @OneToMany(mappedBy = "incidentActivity")
     @JsonIgnore
@@ -156,42 +156,42 @@ public class IncidentActivity implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public Integer getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public IncidentActivity createdBy(Integer createdBy) {
+    public IncidentActivity createdBy(String createdBy) {
         this.createdBy = createdBy;
         return this;
     }
 
-    public void setCreatedBy(Integer createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Instant getDateLastUpdated() {
-        return dateLastUpdated;
+    public Instant getDateUpdated() {
+        return dateUpdated;
     }
 
-    public IncidentActivity dateLastUpdated(Instant dateLastUpdated) {
-        this.dateLastUpdated = dateLastUpdated;
+    public IncidentActivity dateUpdated(Instant dateUpdated) {
+        this.dateUpdated = dateUpdated;
         return this;
     }
 
-    public void setDateLastUpdated(Instant dateLastUpdated) {
-        this.dateLastUpdated = dateLastUpdated;
+    public void setDateUpdated(Instant dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 
-    public Instant getUpdatedBy() {
+    public String getUpdatedBy() {
         return updatedBy;
     }
 
-    public IncidentActivity updatedBy(Instant updatedBy) {
+    public IncidentActivity updatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
         return this;
     }
 
-    public void setUpdatedBy(Instant updatedBy) {
+    public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
 
@@ -264,8 +264,8 @@ public class IncidentActivity implements Serializable {
             ", updatedStatusCode='" + getUpdatedStatusCode() + "'" +
             ", incidentComment='" + getIncidentComment() + "'" +
             ", dateCreated='" + getDateCreated() + "'" +
-            ", createdBy=" + getCreatedBy() +
-            ", dateLastUpdated='" + getDateLastUpdated() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", dateUpdated='" + getDateUpdated() + "'" +
             ", updatedBy='" + getUpdatedBy() + "'" +
             "}";
     }

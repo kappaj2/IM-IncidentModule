@@ -68,7 +68,7 @@ class IncidentActivityGatlingTest extends Simulation {
             .exec(http("Create new incidentActivity")
             .post("/incidentmodule/api/incident-activities")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "eventTypeCode":"SAMPLE_TEXT", "eventNumber":"0", "updatedPriorityCode":"SAMPLE_TEXT", "updatedStatusCode":"SAMPLE_TEXT", "incidentComment":"SAMPLE_TEXT", "dateCreated":"2020-01-01T00:00:00.000Z", "createdBy":"0", "dateLastUpdated":"2020-01-01T00:00:00.000Z", "updatedBy":"2020-01-01T00:00:00.000Z"}""")).asJSON
+            .body(StringBody("""{"id":null, "eventTypeCode":"SAMPLE_TEXT", "eventNumber":"0", "updatedPriorityCode":"SAMPLE_TEXT", "updatedStatusCode":"SAMPLE_TEXT", "incidentComment":"SAMPLE_TEXT", "dateCreated":"2020-01-01T00:00:00.000Z", "createdBy":"SAMPLE_TEXT", "dateUpdated":"2020-01-01T00:00:00.000Z", "updatedBy":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_incidentActivity_url"))).exitHereIfFailed
             .pause(10)

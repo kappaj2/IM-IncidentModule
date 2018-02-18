@@ -29,17 +29,18 @@ import za.co.ajk.incident.service.dto.RegionDTO;
 import za.co.ajk.incident.web.rest.errors.BadRequestAlertException;
 import za.co.ajk.incident.web.rest.util.HeaderUtil;
 
+
 /**
  * REST controller for managing Region.
  */
 @RestController
 @RequestMapping("/api")
 public class RegionResource {
-
+    
     private final Logger log = LoggerFactory.getLogger(RegionResource.class);
-
+    
     private static final String ENTITY_NAME = "region";
-
+    
     private final RegionService regionService;
     
     @Autowired
@@ -48,7 +49,7 @@ public class RegionResource {
     public RegionResource(RegionService regionService) {
         this.regionService = regionService;
     }
-
+    
     /**
      * POST  /regions : Create a new region.
      *
@@ -68,7 +69,7 @@ public class RegionResource {
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
-
+    
     /**
      * PUT  /regions : Updates an existing region.
      *
@@ -90,7 +91,7 @@ public class RegionResource {
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, regionDTO.getId().toString()))
             .body(result);
     }
-
+    
     /**
      * GET  /regions : get all the regions.
      *
@@ -100,12 +101,9 @@ public class RegionResource {
     @Timed
     public List<RegionDTO> getAllRegions() {
         log.debug("REST request to get all Regions");
-
-        testService.getUserIdForCurrentUSer();
-        
         return regionService.findAll();
-        }
-
+    }
+    
     /**
      * GET  /regions/:id : get the "id" region.
      *
@@ -119,7 +117,7 @@ public class RegionResource {
         RegionDTO regionDTO = regionService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(regionDTO));
     }
-
+    
     /**
      * DELETE  /regions/:id : delete the "id" region.
      *
@@ -133,7 +131,7 @@ public class RegionResource {
         regionService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
-
+    
     /**
      * SEARCH  /_search/regions?query=:query : search for the region corresponding
      * to the query.
@@ -147,5 +145,5 @@ public class RegionResource {
         log.debug("REST request to search Regions for query {}", query);
         return regionService.search(query);
     }
-
+    
 }

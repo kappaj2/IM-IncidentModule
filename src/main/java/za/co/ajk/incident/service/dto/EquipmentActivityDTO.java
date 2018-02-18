@@ -29,7 +29,7 @@ public class EquipmentActivityDTO implements Serializable {
 
     private Instant dateCreated;
 
-    private Integer createdBy;
+    private String createdBy;
 
     private Long incidentActivityId;
 
@@ -83,11 +83,11 @@ public class EquipmentActivityDTO implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public Integer getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Integer createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -137,7 +137,7 @@ public class EquipmentActivityDTO implements Serializable {
             ", equipmentActionCode='" + getEquipmentActionCode() + "'" +
             ", activityComment='" + getActivityComment() + "'" +
             ", dateCreated='" + getDateCreated() + "'" +
-            ", createdBy=" + getCreatedBy() +
+            ", createdBy='" + getCreatedBy() + "'" +
             "}";
     }
 }

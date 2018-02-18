@@ -65,23 +65,23 @@ public class IncidentResourceIntTest {
     private static final Instant DEFAULT_DATE_CREATED = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE_CREATED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final Integer DEFAULT_CREATED_BY = 1;
-    private static final Integer UPDATED_CREATED_BY = 2;
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
 
-    private static final Instant DEFAULT_DATE_LAST_UPDATED = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_DATE_LAST_UPDATED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final Instant DEFAULT_DATE_UPDATED = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_DATE_UPDATED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final Integer DEFAULT_UPDATED_BY = 1;
-    private static final Integer UPDATED_UPDATED_BY = 2;
+    private static final String DEFAULT_UPDATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_UPDATED_BY = "BBBBBBBBBB";
 
-    private static final String DEFAULT_INDICENT_RESOLUTION = "AAAAAAAAAA";
-    private static final String UPDATED_INDICENT_RESOLUTION = "BBBBBBBBBB";
+    private static final String DEFAULT_INCIDENT_RESOLUTION = "AAAAAAAAAA";
+    private static final String UPDATED_INCIDENT_RESOLUTION = "BBBBBBBBBB";
 
     private static final Instant DEFAULT_DATE_CLOSED = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE_CLOSED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final Integer DEFAULT_CLOSED_BY = 1;
-    private static final Integer UPDATED_CLOSED_BY = 2;
+    private static final String DEFAULT_CLOSED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CLOSED_BY = "BBBBBBBBBB";
 
     @Autowired
     private IncidentRepository incidentRepository;
@@ -138,9 +138,9 @@ public class IncidentResourceIntTest {
             .incidentStatusCode(DEFAULT_INCIDENT_STATUS_CODE)
             .dateCreated(DEFAULT_DATE_CREATED)
             .createdBy(DEFAULT_CREATED_BY)
-            .dateLastUpdated(DEFAULT_DATE_LAST_UPDATED)
+            .dateUpdated(DEFAULT_DATE_UPDATED)
             .updatedBy(DEFAULT_UPDATED_BY)
-            .indicentResolution(DEFAULT_INDICENT_RESOLUTION)
+            .incidentResolution(DEFAULT_INCIDENT_RESOLUTION)
             .dateClosed(DEFAULT_DATE_CLOSED)
             .closedBy(DEFAULT_CLOSED_BY);
         return incident;
@@ -176,9 +176,9 @@ public class IncidentResourceIntTest {
         assertThat(testIncident.getIncidentStatusCode()).isEqualTo(DEFAULT_INCIDENT_STATUS_CODE);
         assertThat(testIncident.getDateCreated()).isEqualTo(DEFAULT_DATE_CREATED);
         assertThat(testIncident.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testIncident.getDateLastUpdated()).isEqualTo(DEFAULT_DATE_LAST_UPDATED);
+        assertThat(testIncident.getDateUpdated()).isEqualTo(DEFAULT_DATE_UPDATED);
         assertThat(testIncident.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
-        assertThat(testIncident.getIndicentResolution()).isEqualTo(DEFAULT_INDICENT_RESOLUTION);
+        assertThat(testIncident.getIncidentResolution()).isEqualTo(DEFAULT_INCIDENT_RESOLUTION);
         assertThat(testIncident.getDateClosed()).isEqualTo(DEFAULT_DATE_CLOSED);
         assertThat(testIncident.getClosedBy()).isEqualTo(DEFAULT_CLOSED_BY);
 
@@ -361,10 +361,10 @@ public class IncidentResourceIntTest {
 
     @Test
     @Transactional
-    public void checkDateLastUpdatedIsRequired() throws Exception {
+    public void checkDateUpdatedIsRequired() throws Exception {
         int databaseSizeBeforeTest = incidentRepository.findAll().size();
         // set the field null
-        incident.setDateLastUpdated(null);
+        incident.setDateUpdated(null);
 
         // Create the Incident, which fails.
         IncidentDTO incidentDTO = incidentMapper.toDto(incident);
@@ -415,12 +415,12 @@ public class IncidentResourceIntTest {
             .andExpect(jsonPath("$.[*].incidentDescription").value(hasItem(DEFAULT_INCIDENT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].incidentStatusCode").value(hasItem(DEFAULT_INCIDENT_STATUS_CODE.toString())))
             .andExpect(jsonPath("$.[*].dateCreated").value(hasItem(DEFAULT_DATE_CREATED.toString())))
-            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
-            .andExpect(jsonPath("$.[*].dateLastUpdated").value(hasItem(DEFAULT_DATE_LAST_UPDATED.toString())))
-            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY)))
-            .andExpect(jsonPath("$.[*].indicentResolution").value(hasItem(DEFAULT_INDICENT_RESOLUTION.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())))
+            .andExpect(jsonPath("$.[*].dateUpdated").value(hasItem(DEFAULT_DATE_UPDATED.toString())))
+            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY.toString())))
+            .andExpect(jsonPath("$.[*].incidentResolution").value(hasItem(DEFAULT_INCIDENT_RESOLUTION.toString())))
             .andExpect(jsonPath("$.[*].dateClosed").value(hasItem(DEFAULT_DATE_CLOSED.toString())))
-            .andExpect(jsonPath("$.[*].closedBy").value(hasItem(DEFAULT_CLOSED_BY)));
+            .andExpect(jsonPath("$.[*].closedBy").value(hasItem(DEFAULT_CLOSED_BY.toString())));
     }
 
     @Test
@@ -441,12 +441,12 @@ public class IncidentResourceIntTest {
             .andExpect(jsonPath("$.incidentDescription").value(DEFAULT_INCIDENT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.incidentStatusCode").value(DEFAULT_INCIDENT_STATUS_CODE.toString()))
             .andExpect(jsonPath("$.dateCreated").value(DEFAULT_DATE_CREATED.toString()))
-            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
-            .andExpect(jsonPath("$.dateLastUpdated").value(DEFAULT_DATE_LAST_UPDATED.toString()))
-            .andExpect(jsonPath("$.updatedBy").value(DEFAULT_UPDATED_BY))
-            .andExpect(jsonPath("$.indicentResolution").value(DEFAULT_INDICENT_RESOLUTION.toString()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.toString()))
+            .andExpect(jsonPath("$.dateUpdated").value(DEFAULT_DATE_UPDATED.toString()))
+            .andExpect(jsonPath("$.updatedBy").value(DEFAULT_UPDATED_BY.toString()))
+            .andExpect(jsonPath("$.incidentResolution").value(DEFAULT_INCIDENT_RESOLUTION.toString()))
             .andExpect(jsonPath("$.dateClosed").value(DEFAULT_DATE_CLOSED.toString()))
-            .andExpect(jsonPath("$.closedBy").value(DEFAULT_CLOSED_BY));
+            .andExpect(jsonPath("$.closedBy").value(DEFAULT_CLOSED_BY.toString()));
     }
 
     @Test
@@ -478,9 +478,9 @@ public class IncidentResourceIntTest {
             .incidentStatusCode(UPDATED_INCIDENT_STATUS_CODE)
             .dateCreated(UPDATED_DATE_CREATED)
             .createdBy(UPDATED_CREATED_BY)
-            .dateLastUpdated(UPDATED_DATE_LAST_UPDATED)
+            .dateUpdated(UPDATED_DATE_UPDATED)
             .updatedBy(UPDATED_UPDATED_BY)
-            .indicentResolution(UPDATED_INDICENT_RESOLUTION)
+            .incidentResolution(UPDATED_INCIDENT_RESOLUTION)
             .dateClosed(UPDATED_DATE_CLOSED)
             .closedBy(UPDATED_CLOSED_BY);
         IncidentDTO incidentDTO = incidentMapper.toDto(updatedIncident);
@@ -502,9 +502,9 @@ public class IncidentResourceIntTest {
         assertThat(testIncident.getIncidentStatusCode()).isEqualTo(UPDATED_INCIDENT_STATUS_CODE);
         assertThat(testIncident.getDateCreated()).isEqualTo(UPDATED_DATE_CREATED);
         assertThat(testIncident.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testIncident.getDateLastUpdated()).isEqualTo(UPDATED_DATE_LAST_UPDATED);
+        assertThat(testIncident.getDateUpdated()).isEqualTo(UPDATED_DATE_UPDATED);
         assertThat(testIncident.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
-        assertThat(testIncident.getIndicentResolution()).isEqualTo(UPDATED_INDICENT_RESOLUTION);
+        assertThat(testIncident.getIncidentResolution()).isEqualTo(UPDATED_INCIDENT_RESOLUTION);
         assertThat(testIncident.getDateClosed()).isEqualTo(UPDATED_DATE_CLOSED);
         assertThat(testIncident.getClosedBy()).isEqualTo(UPDATED_CLOSED_BY);
 
@@ -573,12 +573,12 @@ public class IncidentResourceIntTest {
             .andExpect(jsonPath("$.[*].incidentDescription").value(hasItem(DEFAULT_INCIDENT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].incidentStatusCode").value(hasItem(DEFAULT_INCIDENT_STATUS_CODE.toString())))
             .andExpect(jsonPath("$.[*].dateCreated").value(hasItem(DEFAULT_DATE_CREATED.toString())))
-            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
-            .andExpect(jsonPath("$.[*].dateLastUpdated").value(hasItem(DEFAULT_DATE_LAST_UPDATED.toString())))
-            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY)))
-            .andExpect(jsonPath("$.[*].indicentResolution").value(hasItem(DEFAULT_INDICENT_RESOLUTION.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())))
+            .andExpect(jsonPath("$.[*].dateUpdated").value(hasItem(DEFAULT_DATE_UPDATED.toString())))
+            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY.toString())))
+            .andExpect(jsonPath("$.[*].incidentResolution").value(hasItem(DEFAULT_INCIDENT_RESOLUTION.toString())))
             .andExpect(jsonPath("$.[*].dateClosed").value(hasItem(DEFAULT_DATE_CLOSED.toString())))
-            .andExpect(jsonPath("$.[*].closedBy").value(hasItem(DEFAULT_CLOSED_BY)));
+            .andExpect(jsonPath("$.[*].closedBy").value(hasItem(DEFAULT_CLOSED_BY.toString())));
     }
 
     @Test

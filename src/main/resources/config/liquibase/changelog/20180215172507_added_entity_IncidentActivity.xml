@@ -46,15 +46,15 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="created_by" type="integer">
+            <column name="created_by" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="date_last_updated" type="timestamp">
+            <column name="date_updated" type="timestamp">
                 <constraints nullable="true" />
             </column>
 
-            <column name="updated_by" type="timestamp">
+            <column name="updated_by" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
@@ -65,8 +65,7 @@
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         <dropDefaultValue tableName="incident_activity" columnName="date_created" columnDataType="datetime"/>
-        <dropDefaultValue tableName="incident_activity" columnName="date_last_updated" columnDataType="datetime"/>
-        <dropDefaultValue tableName="incident_activity" columnName="updated_by" columnDataType="datetime"/>
+        <dropDefaultValue tableName="incident_activity" columnName="date_updated" columnDataType="datetime"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

@@ -68,7 +68,7 @@ class IncidentGatlingTest extends Simulation {
             .exec(http("Create new incident")
             .post("/incidentmodule/api/incidents")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "incidentNumber":"0", "incidentPriorityCode":"SAMPLE_TEXT", "incidentTypeCode":"SAMPLE_TEXT", "incidentHeader":"SAMPLE_TEXT", "incidentDescription":"SAMPLE_TEXT", "incidentStatusCode":"SAMPLE_TEXT", "dateCreated":"2020-01-01T00:00:00.000Z", "createdBy":"0", "dateLastUpdated":"2020-01-01T00:00:00.000Z", "updatedBy":"0", "indicentResolution":"SAMPLE_TEXT", "dateClosed":"2020-01-01T00:00:00.000Z", "closedBy":"0"}""")).asJSON
+            .body(StringBody("""{"id":null, "incidentNumber":"0", "incidentPriorityCode":"SAMPLE_TEXT", "incidentTypeCode":"SAMPLE_TEXT", "incidentHeader":"SAMPLE_TEXT", "incidentDescription":"SAMPLE_TEXT", "incidentStatusCode":"SAMPLE_TEXT", "dateCreated":"2020-01-01T00:00:00.000Z", "createdBy":"SAMPLE_TEXT", "dateUpdated":"2020-01-01T00:00:00.000Z", "updatedBy":"SAMPLE_TEXT", "incidentResolution":"SAMPLE_TEXT", "dateClosed":"2020-01-01T00:00:00.000Z", "closedBy":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_incident_url"))).exitHereIfFailed
             .pause(10)

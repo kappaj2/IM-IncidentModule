@@ -49,7 +49,7 @@
         },
         {
             "fieldName": "createdBy",
-            "fieldType": "Integer"
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20180215172508",

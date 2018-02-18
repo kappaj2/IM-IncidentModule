@@ -30,7 +30,7 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="added_by" type="integer">
+            <column name="added_by" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
 

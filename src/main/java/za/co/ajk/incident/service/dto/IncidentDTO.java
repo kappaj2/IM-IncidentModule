@@ -37,19 +37,19 @@ public class IncidentDTO implements Serializable {
     private Instant dateCreated;
 
     @NotNull
-    private Integer createdBy;
+    private String createdBy;
 
     @NotNull
-    private Instant dateLastUpdated;
+    private Instant dateUpdated;
 
     @NotNull
-    private Integer updatedBy;
+    private String updatedBy;
 
-    private String indicentResolution;
+    private String incidentResolution;
 
     private Instant dateClosed;
 
-    private Integer closedBy;
+    private String closedBy;
 
     private Long companyId;
 
@@ -117,36 +117,36 @@ public class IncidentDTO implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public Integer getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Integer createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Instant getDateLastUpdated() {
-        return dateLastUpdated;
+    public Instant getDateUpdated() {
+        return dateUpdated;
     }
 
-    public void setDateLastUpdated(Instant dateLastUpdated) {
-        this.dateLastUpdated = dateLastUpdated;
+    public void setDateUpdated(Instant dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 
-    public Integer getUpdatedBy() {
+    public String getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(Integer updatedBy) {
+    public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
 
-    public String getIndicentResolution() {
-        return indicentResolution;
+    public String getIncidentResolution() {
+        return incidentResolution;
     }
 
-    public void setIndicentResolution(String indicentResolution) {
-        this.indicentResolution = indicentResolution;
+    public void setIncidentResolution(String incidentResolution) {
+        this.incidentResolution = incidentResolution;
     }
 
     public Instant getDateClosed() {
@@ -157,11 +157,11 @@ public class IncidentDTO implements Serializable {
         this.dateClosed = dateClosed;
     }
 
-    public Integer getClosedBy() {
+    public String getClosedBy() {
         return closedBy;
     }
 
-    public void setClosedBy(Integer closedBy) {
+    public void setClosedBy(String closedBy) {
         this.closedBy = closedBy;
     }
 
@@ -205,12 +205,12 @@ public class IncidentDTO implements Serializable {
             ", incidentDescription='" + getIncidentDescription() + "'" +
             ", incidentStatusCode='" + getIncidentStatusCode() + "'" +
             ", dateCreated='" + getDateCreated() + "'" +
-            ", createdBy=" + getCreatedBy() +
-            ", dateLastUpdated='" + getDateLastUpdated() + "'" +
-            ", updatedBy=" + getUpdatedBy() +
-            ", indicentResolution='" + getIndicentResolution() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", dateUpdated='" + getDateUpdated() + "'" +
+            ", updatedBy='" + getUpdatedBy() + "'" +
+            ", incidentResolution='" + getIncidentResolution() + "'" +
             ", dateClosed='" + getDateClosed() + "'" +
-            ", closedBy=" + getClosedBy() +
+            ", closedBy='" + getClosedBy() + "'" +
             "}";
     }
 }

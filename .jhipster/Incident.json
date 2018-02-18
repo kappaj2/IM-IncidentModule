@@ -66,13 +66,13 @@
         },
         {
             "fieldName": "createdBy",
-            "fieldType": "Integer",
+            "fieldType": "String",
             "fieldValidateRules": [
                 "required"
             ]
         },
         {
-            "fieldName": "dateLastUpdated",
+            "fieldName": "dateUpdated",
             "fieldType": "Instant",
             "fieldValidateRules": [
                 "required"
@@ -80,13 +80,13 @@
         },
         {
             "fieldName": "updatedBy",
-            "fieldType": "Integer",
+            "fieldType": "String",
             "fieldValidateRules": [
                 "required"
             ]
         },
         {
-            "fieldName": "indicentResolution",
+            "fieldName": "incidentResolution",
             "fieldType": "String"
         },
         {
@@ -95,7 +95,7 @@
         },
         {
             "fieldName": "closedBy",
-            "fieldType": "Integer"
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20180215172505",
