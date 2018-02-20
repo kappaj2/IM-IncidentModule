@@ -1,9 +1,9 @@
 package za.co.ajk.incident.repository;
 
-import za.co.ajk.incident.domain.EquipmentActivity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import org.springframework.data.jpa.repository.*;
+import za.co.ajk.incident.domain.EquipmentActivity;
 
 
 /**
@@ -13,4 +13,18 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface EquipmentActivityRepository extends JpaRepository<EquipmentActivity, Long> {
 
+//    /**
+//     *
+//     * @param incidentId
+//     * @return
+//     */
+//    @Query("SELECT max(i.eventNumber) FROM EquipmentActivity i WHERE i.id = ?1")
+//    Integer getMaxEquipmentEventNumberForIncident(Long incidentId);
+//
+//    /**
+//     * Find a list of incident activity entries for the incident
+//     * @param incident
+//     * @return
+//     */
+//    List<IncidentActivity> findIncidentActivitiesByIncident(Incident incident);
 }

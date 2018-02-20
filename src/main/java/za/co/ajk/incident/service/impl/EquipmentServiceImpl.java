@@ -1,22 +1,24 @@
 package za.co.ajk.incident.service.impl;
 
-import za.co.ajk.incident.service.EquipmentService;
-import za.co.ajk.incident.domain.Equipment;
-import za.co.ajk.incident.repository.EquipmentRepository;
-import za.co.ajk.incident.repository.search.EquipmentSearchRepository;
-import za.co.ajk.incident.service.dto.EquipmentDTO;
-import za.co.ajk.incident.service.mapper.EquipmentMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import za.co.ajk.incident.domain.Company;
+import za.co.ajk.incident.domain.Equipment;
+import za.co.ajk.incident.repository.EquipmentRepository;
+import za.co.ajk.incident.repository.search.EquipmentSearchRepository;
+import za.co.ajk.incident.service.EquipmentService;
+import za.co.ajk.incident.service.dto.EquipmentDTO;
+import za.co.ajk.incident.service.mapper.EquipmentMapper;
+
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Equipment.
@@ -109,5 +111,11 @@ public class EquipmentServiceImpl implements EquipmentService {
             .stream(equipmentSearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .map(equipmentMapper::toDto)
             .collect(Collectors.toList());
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Equipment getEquipmentByCompanyAndEquipmentId(Company company, Long id){
+        return equipmentRepository.getEquipmentByCompanyAndEquipmentId(company, id.intValue());
     }
 }

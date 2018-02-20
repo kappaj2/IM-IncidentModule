@@ -1,7 +1,10 @@
 package za.co.ajk.incident.service;
 
-import za.co.ajk.incident.service.dto.EquipmentDTO;
 import java.util.List;
+
+import za.co.ajk.incident.domain.Company;
+import za.co.ajk.incident.domain.Equipment;
+import za.co.ajk.incident.service.dto.EquipmentDTO;
 
 /**
  * Service Interface for managing Equipment.
@@ -42,8 +45,16 @@ public interface EquipmentService {
      * Search for the equipment corresponding to the query.
      *
      * @param query the query of the search
-     * 
+     *
      * @return the list of entities
      */
     List<EquipmentDTO> search(String query);
+    
+    /**
+     * Search for a piece of equipment using the provided company and equipment id.
+     * @param company
+     * @param id
+     * @return
+     */
+    Equipment getEquipmentByCompanyAndEquipmentId(Company company, Long id);
 }
