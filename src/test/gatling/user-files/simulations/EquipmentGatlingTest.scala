@@ -68,7 +68,7 @@ class EquipmentGatlingTest extends Simulation {
             .exec(http("Create new equipment")
             .post("/incidentmodule/api/equipment")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "equipmentId":"0", "dateAdded":"2020-01-01T00:00:00.000Z", "addedBy":"0"}""")).asJSON
+            .body(StringBody("""{"id":null, "equipmentId":"0", "dateAdded":"2020-01-01T00:00:00.000Z", "addedBy":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_equipment_url"))).exitHereIfFailed
             .pause(10)

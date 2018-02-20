@@ -1,15 +1,21 @@
 package za.co.ajk.incident.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 /**
  * A EquipmentActivity.
@@ -46,7 +52,7 @@ public class EquipmentActivity implements Serializable {
     private Instant dateCreated;
 
     @Column(name = "created_by")
-    private Integer createdBy;
+    private String createdBy;
 
     @ManyToOne
     private IncidentActivity incidentActivity;
@@ -128,16 +134,16 @@ public class EquipmentActivity implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public Integer getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public EquipmentActivity createdBy(Integer createdBy) {
+    public EquipmentActivity createdBy(String createdBy) {
         this.createdBy = createdBy;
         return this;
     }
 
-    public void setCreatedBy(Integer createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -197,7 +203,7 @@ public class EquipmentActivity implements Serializable {
             ", equipmentActionCode='" + getEquipmentActionCode() + "'" +
             ", activityComment='" + getActivityComment() + "'" +
             ", dateCreated='" + getDateCreated() + "'" +
-            ", createdBy=" + getCreatedBy() +
+            ", createdBy='" + getCreatedBy() + "'" +
             "}";
     }
 }

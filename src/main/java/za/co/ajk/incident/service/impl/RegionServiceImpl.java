@@ -1,22 +1,25 @@
 package za.co.ajk.incident.service.impl;
 
-import za.co.ajk.incident.service.RegionService;
-import za.co.ajk.incident.domain.Region;
-import za.co.ajk.incident.repository.RegionRepository;
-import za.co.ajk.incident.repository.search.RegionSearchRepository;
-import za.co.ajk.incident.service.dto.RegionDTO;
-import za.co.ajk.incident.service.mapper.RegionMapper;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import za.co.ajk.incident.domain.Region;
+import za.co.ajk.incident.repository.RegionRepository;
+import za.co.ajk.incident.repository.search.RegionSearchRepository;
+import za.co.ajk.incident.security.SecurityUtils;
+import za.co.ajk.incident.service.RegionService;
+import za.co.ajk.incident.service.dto.RegionDTO;
+import za.co.ajk.incident.service.mapper.RegionMapper;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Region.
@@ -64,6 +67,9 @@ public class RegionServiceImpl implements RegionService {
     @Transactional(readOnly = true)
     public List<RegionDTO> findAll() {
         log.debug("Request to get all Regions");
+    
+        Optional<String> currentUserId = SecurityUtils.getCurrentUserLogin();
+        
         return regionRepository.findAll().stream()
             .map(regionMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));

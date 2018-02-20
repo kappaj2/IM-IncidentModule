@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import za.co.ajk.incident.domain.Company;
@@ -28,6 +29,7 @@ import za.co.ajk.incident.service.dto.RegionDTO;
 /**
  * Class to load basic data for unit testing and QA.
  */
+@Profile("dev")
 @Service
 public class BaseDataPopulator implements CommandLineRunner {
     
@@ -59,16 +61,16 @@ public class BaseDataPopulator implements CommandLineRunner {
     private Region kzn = new Region().regionCode("REG2").regionName("Kwazulu Natal").country(southAfrica);
     private Region westernCape = new Region().regionCode("REG3").regionName("Western Cape").country(southAfrica);
     
-    private Company ca1_1 = new Company().companyCode("CA1").companyName("Company One").branchCode("BC1").region(westernCape);
-    private Company ca1_2 = new Company().companyCode("CA1").companyName("Company One").branchCode("BC2").region(westernCape);
-    private Company ca1_3 = new Company().companyCode("CA1").companyName("Company One").branchCode("BC3").region(westernCape);
+    private Company ca1_1 = new Company().name("Company One").branchCode("BC1").region(westernCape);
+    private Company ca1_2 = new Company().name("Company One").branchCode("BC2").region(westernCape);
+    private Company ca1_3 = new Company().name("Company One").branchCode("BC3").region(westernCape);
     
-    private Company ca2 = new Company().companyCode("CA2").companyName("Company Two").region(gauteng);
-    private Company ca3 = new Company().companyCode("CA3").companyName("Company Three").region(gauteng);
-    private Company ca4 = new Company().companyCode("CA4").companyName("Company Four").region(kzn);
-    private Company ca5 = new Company().companyCode("CA5").companyName("Company Five").region(kzn);
-    private Company ca6 = new Company().companyCode("CA6").companyName("Company Six");
-    private Company ca7 = new Company().companyCode("CA7").companyName("Company Seven");
+    private Company ca2 = new Company().name("Company Two").region(gauteng);
+    private Company ca3 = new Company().name("Company Three").region(gauteng);
+    private Company ca4 = new Company().name("Company Four").region(kzn);
+    private Company ca5 = new Company().name("Company Five").region(kzn);
+    private Company ca6 = new Company().name("Company Six");
+    private Company ca7 = new Company().name("Company Seven");
     
     @Override
     public void run(String... args) throws Exception {
@@ -126,38 +128,38 @@ public class BaseDataPopulator implements CommandLineRunner {
                 .company(ca1_1)
                 .equipmentId(Integer.valueOf(1))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             equipmentRepository.save(new Equipment()
                 .company(ca1_1)
                 .equipmentId(Integer.valueOf(2))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             equipmentRepository.save(new Equipment()
                 .company(ca1_2)
                 .equipmentId(Integer.valueOf(3))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             equipmentRepository.save(new Equipment()
                 .company(ca1_2)
                 .equipmentId(Integer.valueOf(4))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             
             equipmentRepository.save(new Equipment()
                 .company(ca2)
                 .equipmentId(Integer.valueOf(21))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             equipmentRepository.save(new Equipment()
                 .company(ca2)
                 .equipmentId(Integer.valueOf(22))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             equipmentRepository.save(new Equipment()
                 .company(ca2)
                 .equipmentId(Integer.valueOf(23))
                 .dateAdded(Instant.now())
-                .addedBy(Integer.valueOf(1)));
+                .addedBy("SYSTEM"));
             
             equipmentRepository.findAll().stream().forEach(System.out::print);
         }

@@ -68,7 +68,7 @@ class EquipmentActivityGatlingTest extends Simulation {
             .exec(http("Create new equipmentActivity")
             .post("/incidentmodule/api/equipment-activities")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "onLoan":null, "replacement":null, "equipmentActionCode":"SAMPLE_TEXT", "activityComment":"SAMPLE_TEXT", "dateCreated":"2020-01-01T00:00:00.000Z", "createdBy":"0"}""")).asJSON
+            .body(StringBody("""{"id":null, "onLoan":null, "replacement":null, "equipmentActionCode":"SAMPLE_TEXT", "activityComment":"SAMPLE_TEXT", "dateCreated":"2020-01-01T00:00:00.000Z", "createdBy":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_equipmentActivity_url"))).exitHereIfFailed
             .pause(10)

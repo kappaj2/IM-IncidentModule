@@ -1,17 +1,26 @@
 package za.co.ajk.incident.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * A Company.
@@ -29,22 +38,18 @@ public class Company implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "company_code", nullable = false)
-    private String companyCode;
-
-    @NotNull
-    @Column(name = "company_name", nullable = false)
-    private String companyName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "branch_code")
     private String branchCode;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Incident> incidents = new HashSet<>();
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Equipment> equipment = new HashSet<>();
@@ -61,30 +66,17 @@ public class Company implements Serializable {
         this.id = id;
     }
 
-    public String getCompanyCode() {
-        return companyCode;
+    public String getName() {
+        return name;
     }
 
-    public Company companyCode(String companyCode) {
-        this.companyCode = companyCode;
+    public Company name(String name) {
+        this.name = name;
         return this;
     }
 
-    public void setCompanyCode(String companyCode) {
-        this.companyCode = companyCode;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public Company companyName(String companyName) {
-        this.companyName = companyName;
-        return this;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getBranchCode() {
@@ -188,8 +180,7 @@ public class Company implements Serializable {
     public String toString() {
         return "Company{" +
             "id=" + getId() +
-            ", companyCode='" + getCompanyCode() + "'" +
-            ", companyName='" + getCompanyName() + "'" +
+            ", name='" + getName() + "'" +
             ", branchCode='" + getBranchCode() + "'" +
             "}";
     }

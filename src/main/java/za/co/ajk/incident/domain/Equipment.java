@@ -1,18 +1,27 @@
 package za.co.ajk.incident.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * A Equipment.
@@ -39,9 +48,9 @@ public class Equipment implements Serializable {
 
     @NotNull
     @Column(name = "added_by", nullable = false)
-    private Integer addedBy;
+    private String addedBy;
 
-    @OneToMany(mappedBy = "equipment")
+    @OneToMany(mappedBy = "equipment", fetch = FetchType.LAZY)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<EquipmentActivity> equipmentActivities = new HashSet<>();
@@ -84,16 +93,16 @@ public class Equipment implements Serializable {
         this.dateAdded = dateAdded;
     }
 
-    public Integer getAddedBy() {
+    public String getAddedBy() {
         return addedBy;
     }
 
-    public Equipment addedBy(Integer addedBy) {
+    public Equipment addedBy(String addedBy) {
         this.addedBy = addedBy;
         return this;
     }
 
-    public void setAddedBy(Integer addedBy) {
+    public void setAddedBy(String addedBy) {
         this.addedBy = addedBy;
     }
 
@@ -162,7 +171,7 @@ public class Equipment implements Serializable {
             "id=" + getId() +
             ", equipmentId=" + getEquipmentId() +
             ", dateAdded='" + getDateAdded() + "'" +
-            ", addedBy=" + getAddedBy() +
+            ", addedBy='" + getAddedBy() + "'" +
             "}";
     }
 }

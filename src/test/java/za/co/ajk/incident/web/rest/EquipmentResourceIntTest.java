@@ -50,8 +50,8 @@ public class EquipmentResourceIntTest {
     private static final Instant DEFAULT_DATE_ADDED = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE_ADDED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final Integer DEFAULT_ADDED_BY = 1;
-    private static final Integer UPDATED_ADDED_BY = 2;
+    private static final String DEFAULT_ADDED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_ADDED_BY = "BBBBBBBBBB";
 
     @Autowired
     private EquipmentRepository equipmentRepository;
@@ -227,7 +227,7 @@ public class EquipmentResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(equipment.getId().intValue())))
             .andExpect(jsonPath("$.[*].equipmentId").value(hasItem(DEFAULT_EQUIPMENT_ID)))
             .andExpect(jsonPath("$.[*].dateAdded").value(hasItem(DEFAULT_DATE_ADDED.toString())))
-            .andExpect(jsonPath("$.[*].addedBy").value(hasItem(DEFAULT_ADDED_BY)));
+            .andExpect(jsonPath("$.[*].addedBy").value(hasItem(DEFAULT_ADDED_BY.toString())));
     }
 
     @Test
@@ -243,7 +243,7 @@ public class EquipmentResourceIntTest {
             .andExpect(jsonPath("$.id").value(equipment.getId().intValue()))
             .andExpect(jsonPath("$.equipmentId").value(DEFAULT_EQUIPMENT_ID))
             .andExpect(jsonPath("$.dateAdded").value(DEFAULT_DATE_ADDED.toString()))
-            .andExpect(jsonPath("$.addedBy").value(DEFAULT_ADDED_BY));
+            .andExpect(jsonPath("$.addedBy").value(DEFAULT_ADDED_BY.toString()));
     }
 
     @Test
@@ -345,7 +345,7 @@ public class EquipmentResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(equipment.getId().intValue())))
             .andExpect(jsonPath("$.[*].equipmentId").value(hasItem(DEFAULT_EQUIPMENT_ID)))
             .andExpect(jsonPath("$.[*].dateAdded").value(hasItem(DEFAULT_DATE_ADDED.toString())))
-            .andExpect(jsonPath("$.[*].addedBy").value(hasItem(DEFAULT_ADDED_BY)));
+            .andExpect(jsonPath("$.[*].addedBy").value(hasItem(DEFAULT_ADDED_BY.toString())));
     }
 
     @Test

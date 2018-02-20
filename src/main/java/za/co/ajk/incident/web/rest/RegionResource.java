@@ -1,25 +1,34 @@
 package za.co.ajk.incident.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import za.co.ajk.incident.service.RegionService;
-import za.co.ajk.incident.web.rest.errors.BadRequestAlertException;
-import za.co.ajk.incident.web.rest.util.HeaderUtil;
-import za.co.ajk.incident.service.dto.RegionDTO;
-import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.codahale.metrics.annotation.Timed;
+import io.github.jhipster.web.util.ResponseUtil;
+import za.co.ajk.incident.service.RegionService;
+import za.co.ajk.incident.service.TestService;
+import za.co.ajk.incident.service.dto.RegionDTO;
+import za.co.ajk.incident.web.rest.errors.BadRequestAlertException;
+import za.co.ajk.incident.web.rest.util.HeaderUtil;
+
 
 /**
  * REST controller for managing Region.
@@ -27,17 +36,20 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 @RestController
 @RequestMapping("/api")
 public class RegionResource {
-
+    
     private final Logger log = LoggerFactory.getLogger(RegionResource.class);
-
+    
     private static final String ENTITY_NAME = "region";
-
+    
     private final RegionService regionService;
-
+    
+    @Autowired
+    private TestService testService;
+    
     public RegionResource(RegionService regionService) {
         this.regionService = regionService;
     }
-
+    
     /**
      * POST  /regions : Create a new region.
      *
@@ -57,7 +69,7 @@ public class RegionResource {
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
-
+    
     /**
      * PUT  /regions : Updates an existing region.
      *
@@ -79,7 +91,7 @@ public class RegionResource {
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, regionDTO.getId().toString()))
             .body(result);
     }
-
+    
     /**
      * GET  /regions : get all the regions.
      *
@@ -90,8 +102,8 @@ public class RegionResource {
     public List<RegionDTO> getAllRegions() {
         log.debug("REST request to get all Regions");
         return regionService.findAll();
-        }
-
+    }
+    
     /**
      * GET  /regions/:id : get the "id" region.
      *
@@ -105,7 +117,7 @@ public class RegionResource {
         RegionDTO regionDTO = regionService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(regionDTO));
     }
-
+    
     /**
      * DELETE  /regions/:id : delete the "id" region.
      *
@@ -119,7 +131,7 @@ public class RegionResource {
         regionService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
-
+    
     /**
      * SEARCH  /_search/regions?query=:query : search for the region corresponding
      * to the query.
@@ -133,5 +145,5 @@ public class RegionResource {
         log.debug("REST request to search Regions for query {}", query);
         return regionService.search(query);
     }
-
+    
 }
