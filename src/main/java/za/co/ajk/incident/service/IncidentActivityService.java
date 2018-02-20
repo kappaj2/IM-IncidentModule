@@ -1,7 +1,9 @@
 package za.co.ajk.incident.service;
 
-import za.co.ajk.incident.service.dto.IncidentActivityDTO;
 import java.util.List;
+
+import za.co.ajk.incident.domain.Incident;
+import za.co.ajk.incident.service.dto.IncidentActivityDTO;
 
 /**
  * Service Interface for managing IncidentActivity.
@@ -42,8 +44,15 @@ public interface IncidentActivityService {
      * Search for the incidentActivity corresponding to the query.
      *
      * @param query the query of the search
-     * 
+     *
      * @return the list of entities
      */
     List<IncidentActivityDTO> search(String query);
+    
+    /**
+     * Find incident activities for an incident.
+     * @param incident
+     * @return
+     */
+    List<IncidentActivityDTO> findIncidentActivitiesByIncident(Incident incident);
 }

@@ -23,7 +23,6 @@ import za.co.ajk.incident.repository.IncidentActivityRepository;
 import za.co.ajk.incident.repository.IncidentRepository;
 import za.co.ajk.incident.repository.RegionRepository;
 import za.co.ajk.incident.repository.search.IncidentSearchRepository;
-import za.co.ajk.incident.security.SecurityUtils;
 import za.co.ajk.incident.service.CountryService;
 import za.co.ajk.incident.service.IncidentService;
 import za.co.ajk.incident.service.dto.CreateNewIncidentDTO;
@@ -92,7 +91,7 @@ public class IncidentServiceImpl implements IncidentService {
         Incident incident = new Incident();
         incident.setIncidentNumber(lastIncidentNumber);
         incident.setCompany(company);
-        incident.setCreatedBy(SecurityUtils.getCurrentUserLogin().get());
+        incident.setCreatedBy(createNewIncidentDTO.getOperator());
         incident.setDateCreated(Instant.now());
         incident.setIncidentDescription(createNewIncidentDTO.getIncidentDescription());
         incident.setIncidentHeader(createNewIncidentDTO.getIncidentHeader());
@@ -100,7 +99,7 @@ public class IncidentServiceImpl implements IncidentService {
         incident.setIncidentStatusCode(createNewIncidentDTO.getIncidentStatusCode());
         incident.setIncidentTypeCode(createNewIncidentDTO.getIncidentTypeCode());
         incident.setDateUpdated(Instant.now());
-        incident.setUpdatedBy(SecurityUtils.getCurrentUserLogin().get());
+        incident.setUpdatedBy(createNewIncidentDTO.getOperator());
         
         /*
             Create the incident activity entry.
@@ -110,14 +109,14 @@ public class IncidentServiceImpl implements IncidentService {
         incidentActivityEventNumber = incidentActivityEventNumber == null ? 1 : ++incidentActivityEventNumber;
         
         IncidentActivity incidentActivity = new IncidentActivity();
-        incidentActivity.setCreatedBy(SecurityUtils.getCurrentUserLogin().get());
+        incidentActivity.setCreatedBy(createNewIncidentDTO.getOperator());
         incidentActivity.setDateCreated(Instant.now());
         incidentActivity.setEventTypeCode(EventType.OPEN_INCIDENT.getEventTypeCode());
         incidentActivity.setUpdatedStatusCode(IncidentStatusType.OPENED.getIncidentStatusCode());
         incidentActivity.setIncident(incident);
         incidentActivity.setIncidentComment("Incident created");
         incidentActivity.setDateUpdated(Instant.now());
-        incidentActivity.setUpdatedBy(SecurityUtils.getCurrentUserLogin().get());
+        incidentActivity.setUpdatedBy(createNewIncidentDTO.getOperator());
         incidentActivity.setEventNumber(incidentActivityEventNumber);
         incidentActivity.setUpdatedPriorityCode(createNewIncidentDTO.getIncidentPriorityCode());
         

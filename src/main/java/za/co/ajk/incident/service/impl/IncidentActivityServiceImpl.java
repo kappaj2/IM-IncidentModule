@@ -1,22 +1,25 @@
 package za.co.ajk.incident.service.impl;
 
-import za.co.ajk.incident.service.IncidentActivityService;
-import za.co.ajk.incident.domain.IncidentActivity;
-import za.co.ajk.incident.repository.IncidentActivityRepository;
-import za.co.ajk.incident.repository.search.IncidentActivitySearchRepository;
-import za.co.ajk.incident.service.dto.IncidentActivityDTO;
-import za.co.ajk.incident.service.mapper.IncidentActivityMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import za.co.ajk.incident.domain.Incident;
+import za.co.ajk.incident.domain.IncidentActivity;
+import za.co.ajk.incident.repository.IncidentActivityRepository;
+import za.co.ajk.incident.repository.search.IncidentActivitySearchRepository;
+import za.co.ajk.incident.service.IncidentActivityService;
+import za.co.ajk.incident.service.dto.IncidentActivityDTO;
+import za.co.ajk.incident.service.mapper.IncidentActivityMapper;
+
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
 
 /**
  * Service Implementation for managing IncidentActivity.
@@ -109,5 +112,14 @@ public class IncidentActivityServiceImpl implements IncidentActivityService {
             .stream(incidentActivitySearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .map(incidentActivityMapper::toDto)
             .collect(Collectors.toList());
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<IncidentActivityDTO> findIncidentActivitiesByIncident(Incident incident){
+        List<IncidentActivity> incidentActivityList = incidentActivityRepository.findIncidentActivitiesByIncident(incident);
+        return incidentActivityList.stream()
+            .map(incidentActivityMapper::toDto)
+            .collect(Collectors.toCollection(LinkedList::new));
     }
 }

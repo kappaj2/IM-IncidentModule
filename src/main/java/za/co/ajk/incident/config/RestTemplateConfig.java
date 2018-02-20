@@ -33,4 +33,3 @@ public class RestTemplateConfig {
         return restTemplate;
     }
 }
-//http://springinpractice.com/2013/10/27/how-to-send-an-http-header-with-every-request-with-spring-resttemplate
