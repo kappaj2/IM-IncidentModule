@@ -3,6 +3,7 @@ package za.co.ajk.incident.web.rest;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -24,12 +25,18 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.ajk.incident.IncidentModuleApp;
 import za.co.ajk.incident.domain.Company;
 import za.co.ajk.incident.domain.Country;
+import za.co.ajk.incident.domain.Equipment;
+import za.co.ajk.incident.domain.EquipmentActivity;
 import za.co.ajk.incident.domain.Incident;
+import za.co.ajk.incident.domain.IncidentActivity;
 import za.co.ajk.incident.domain.Region;
 import za.co.ajk.incident.enums.EventType;
 import za.co.ajk.incident.enums.IncidentStatusType;
 import za.co.ajk.incident.repository.CompanyRepository;
 import za.co.ajk.incident.repository.CountryRepository;
+import za.co.ajk.incident.repository.EquipmentActivityRepository;
+import za.co.ajk.incident.repository.EquipmentRepository;
+import za.co.ajk.incident.repository.IncidentActivityRepository;
 import za.co.ajk.incident.repository.IncidentRepository;
 import za.co.ajk.incident.repository.RegionRepository;
 import za.co.ajk.incident.repository.search.IncidentSearchRepository;
@@ -118,6 +125,9 @@ public class IncidentResourceIntTest {
     private IncidentService incidentService;
     
     @Autowired
+    private IncidentActivityRepository incidentActivityRepository;
+    
+    @Autowired
     private IncidentActivityService incidentActivityService;
     
     @Autowired
@@ -131,6 +141,12 @@ public class IncidentResourceIntTest {
     
     @Autowired
     private CompanyRepository companyRepository;
+    
+    @Autowired
+    private EquipmentRepository equipmentRepository;
+    
+    @Autowired
+    private EquipmentActivityRepository equipmentActivityRepository;
     
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -164,6 +180,18 @@ public class IncidentResourceIntTest {
         countryRepository.save(southAfrica);
         regionRepository.save(gauteng);
         companyRepository.save(ca1_1);
+    
+        equipmentRepository.save(new Equipment()
+            .company(ca1_1)
+            .equipmentId(Integer.valueOf(1))
+            .dateAdded(Instant.now())
+            .addedBy("SYSTEM"));
+        equipmentRepository.save(new Equipment()
+            .company(ca1_1)
+            .equipmentId(Integer.valueOf(2))
+            .dateAdded(Instant.now())
+            .addedBy("SYSTEM"));
+        
         /*
             Each test will increment the id's that H2 used for creating the entry. For company it will cause the DTO to fail
             with a FK not found exception. Increment the DEFAULT_COMPANY with each run.
@@ -213,6 +241,25 @@ public class IncidentResourceIntTest {
         createNewIncidentDTO.setIncidentStatusCode(DEFAULT_INCIDENT_STATUS_CODE);
         createNewIncidentDTO.setOperator(DEFAULT_OPERATOR);
         
+        CreateNewIncidentDTO.Equipment eq1 = new CreateNewIncidentDTO.Equipment();
+        eq1.setEquipmentActionCode("A1");
+        eq1.setEquipmentComment("Equipment 1 comment");
+        eq1.setEquipmentId(1l);
+        eq1.setOnLoan(true);
+        eq1.setReplacement(false);
+        
+        CreateNewIncidentDTO.Equipment eq2 = new CreateNewIncidentDTO.Equipment();
+        eq2.setEquipmentActionCode("A5");
+        eq2.setEquipmentComment("Equipment 2 comment");
+        eq2.setEquipmentId(2l);
+        eq2.setOnLoan(true);
+        eq2.setReplacement(false);
+    
+        List<CreateNewIncidentDTO.Equipment> equipmentList = new ArrayList<>();
+        equipmentList.add(eq1);
+        equipmentList.add(eq2);
+        
+        createNewIncidentDTO.setEquipmentList(equipmentList);
         return createNewIncidentDTO;
     }
     
@@ -305,6 +352,25 @@ public class IncidentResourceIntTest {
             assertThat(incidentAct.getUpdatedPriorityCode()).isEqualTo(DEFAULT_INCIDENT_PRIORITY_CODE);
             assertThat(incidentAct.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
         });
+        
+        /*
+            Part of the incident activity is also the creation of two entries for equipment.
+         */
+    
+        List<IncidentActivity> incidentActivityList = incidentActivityRepository.findIncidentActivitiesByIncident(testIncident);
+        incidentActivityList.stream().forEach(incidentActivity -> {
+    
+            incidentActivity.getEventNumber();
+            
+            List<EquipmentActivity> equipmentActivityList =
+                equipmentActivityRepository.findEquipmentActivitiesByIncidentActivity(incidentActivity);
+    
+            equipmentActivityList.stream().forEach(equipmentActivity -> {
+                equipmentActivity.getCreatedBy();
+            });
+        });
+
+
         
     }
     

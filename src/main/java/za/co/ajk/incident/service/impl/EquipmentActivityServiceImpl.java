@@ -1,22 +1,25 @@
 package za.co.ajk.incident.service.impl;
 
-import za.co.ajk.incident.service.EquipmentActivityService;
-import za.co.ajk.incident.domain.EquipmentActivity;
-import za.co.ajk.incident.repository.EquipmentActivityRepository;
-import za.co.ajk.incident.repository.search.EquipmentActivitySearchRepository;
-import za.co.ajk.incident.service.dto.EquipmentActivityDTO;
-import za.co.ajk.incident.service.mapper.EquipmentActivityMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import za.co.ajk.incident.domain.Equipment;
+import za.co.ajk.incident.domain.EquipmentActivity;
+import za.co.ajk.incident.domain.IncidentActivity;
+import za.co.ajk.incident.repository.EquipmentActivityRepository;
+import za.co.ajk.incident.repository.search.EquipmentActivitySearchRepository;
+import za.co.ajk.incident.service.EquipmentActivityService;
+import za.co.ajk.incident.service.dto.EquipmentActivityDTO;
+import za.co.ajk.incident.service.mapper.EquipmentActivityMapper;
+
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing EquipmentActivity.
@@ -110,4 +113,30 @@ public class EquipmentActivityServiceImpl implements EquipmentActivityService {
             .map(equipmentActivityMapper::toDto)
             .collect(Collectors.toList());
     }
+    
+    
+    
+    /**
+     * Search for EquipmentActivity using the IncidentActivity and equipment.
+     * @param equipment
+     * @param incidentActivity
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<EquipmentActivity> findEquipmentActivitiesByEquipmentAndIncidentActivity(Equipment equipment, IncidentActivity incidentActivity){
+        return equipmentActivityRepository.findEquipmentActivitiesByEquipmentAndIncidentActivity(equipment, incidentActivity);
+    }
+    
+    /**
+     * Find all the equipment involved in the incident activity.
+     * @param incidentActivity
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<EquipmentActivity> findEquipmentActivitiesByIncidentActivity(IncidentActivity incidentActivity){
+        return equipmentActivityRepository.findEquipmentActivitiesByIncidentActivity(incidentActivity);
+    }
+    
 }

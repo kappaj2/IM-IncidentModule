@@ -82,7 +82,7 @@ public class IncidentServiceImpl implements IncidentService {
      * @return
      */
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRED)
     public IncidentDTO createNewIncident(CreateNewIncidentDTO createNewIncidentDTO) {
         
         // Find the company using the company id provided.
@@ -129,17 +129,19 @@ public class IncidentServiceImpl implements IncidentService {
     
     /**
      * Create incident activity for the specific incident.
+     *
      * @param incident
      * @param createNewIncidentDTO
      * @Return IncidentActivity
      */
     private IncidentActivity createIncidentEventActivity(Incident incident,
-                                             CreateNewIncidentDTO createNewIncidentDTO){
-
-        Integer incidentActivityEventNumber = incidentActivityRepository.getMaxIncidentEventNumberForIncident(incident.getId());
-    
+                                                         CreateNewIncidentDTO createNewIncidentDTO) {
+        
+        Integer incidentActivityEventNumber = incidentActivityRepository
+            .getMaxIncidentEventNumberForIncident(incident.getId());
+        
         incidentActivityEventNumber = incidentActivityEventNumber == null ? 1 : ++incidentActivityEventNumber;
-    
+        
         IncidentActivity incidentActivity = new IncidentActivity();
         incidentActivity.setCreatedBy(createNewIncidentDTO.getOperator());
         incidentActivity.setDateCreated(Instant.now());
@@ -158,20 +160,21 @@ public class IncidentServiceImpl implements IncidentService {
     
     /**
      * The incident activity will be the link for equipment. This will allow equipment to be put on loan, replaced, etc.
+     *
      * @param incidentActivity
      * @param createNewIncidentDTO
      */
     private void createIncidentEquipmentActivity(CreateNewIncidentDTO createNewIncidentDTO,
                                                  IncidentActivity incidentActivity,
-                                                 Company company){
+                                                 Company company) {
         
         List<CreateNewIncidentDTO.Equipment> equipList = createNewIncidentDTO.getEquipmentList();
-    
-        equipList.stream().forEach(equip ->{
-    
+        
+        equipList.stream().forEach(equip -> {
+            
             Equipment entity = equipmentService.getEquipmentByCompanyAndEquipmentId(company, equip.getEquipmentId());
             
-            if(entity == null){
+            if (entity == null) {
                 log.info("Equipment not found in local DB");
                 throw new InvalidEquipmentIdReceivedException();
             }
