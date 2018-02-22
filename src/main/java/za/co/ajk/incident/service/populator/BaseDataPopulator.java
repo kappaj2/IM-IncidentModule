@@ -77,7 +77,7 @@ public class BaseDataPopulator implements CommandLineRunner {
         loadBaseCountries();
         loadBaseRegions();
         loadBaseCompanies();
-        loadBaseEquipment();
+       // loadBaseEquipment();
     }
     
     private void loadBaseCountries() {
