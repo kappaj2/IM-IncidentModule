@@ -24,7 +24,7 @@ public class RestTemplateConfig {
     public RestTemplate restTemplate(RestTemplateBuilder builder, ApplicationProperties props) {
         builder.setConnectTimeout(props.getRestTemplateConfig().getConnectTimeout());
         builder.setReadTimeout(props.getRestTemplateConfig().getReadTimeout());
-    
+        
         List<ClientHttpRequestInterceptor> addInterceptors = new ArrayList<>();
         addInterceptors.add(new RestTemplateInterceptor());
         
