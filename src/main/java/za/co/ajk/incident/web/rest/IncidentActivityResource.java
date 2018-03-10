@@ -1,25 +1,31 @@
 package za.co.ajk.incident.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import za.co.ajk.incident.service.IncidentActivityService;
-import za.co.ajk.incident.web.rest.errors.BadRequestAlertException;
-import za.co.ajk.incident.web.rest.util.HeaderUtil;
-import za.co.ajk.incident.service.dto.IncidentActivityDTO;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import com.codahale.metrics.annotation.Timed;
+import io.github.jhipster.web.util.ResponseUtil;
+import za.co.ajk.incident.service.IncidentActivityService;
+import za.co.ajk.incident.service.dto.IncidentActivityDTO;
+import za.co.ajk.incident.web.rest.errors.BadRequestAlertException;
+import za.co.ajk.incident.web.rest.util.HeaderUtil;
 
 /**
  * REST controller for managing IncidentActivity.
@@ -39,13 +45,13 @@ public class IncidentActivityResource {
     }
 
     /**
-     * POST  /incident-activities : Create a new incidentActivity.
+     * POST  /v1/incident-activities : Create a new incidentActivity.
      *
      * @param incidentActivityDTO the incidentActivityDTO to create
      * @return the ResponseEntity with status 201 (Created) and with body the new incidentActivityDTO, or with status 400 (Bad Request) if the incidentActivity has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/incident-activities")
+    @PostMapping("/v1/incident-activities")
     @Timed
     public ResponseEntity<IncidentActivityDTO> createIncidentActivity(@Valid @RequestBody IncidentActivityDTO incidentActivityDTO) throws URISyntaxException {
         log.debug("REST request to save IncidentActivity : {}", incidentActivityDTO);
@@ -59,7 +65,7 @@ public class IncidentActivityResource {
     }
 
     /**
-     * PUT  /incident-activities : Updates an existing incidentActivity.
+     * PUT  /v1/incident-activities : Updates an existing incidentActivity.
      *
      * @param incidentActivityDTO the incidentActivityDTO to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated incidentActivityDTO,
@@ -67,7 +73,7 @@ public class IncidentActivityResource {
      * or with status 500 (Internal Server Error) if the incidentActivityDTO couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/incident-activities")
+    @PutMapping("/v1/incident-activities")
     @Timed
     public ResponseEntity<IncidentActivityDTO> updateIncidentActivity(@Valid @RequestBody IncidentActivityDTO incidentActivityDTO) throws URISyntaxException {
         log.debug("REST request to update IncidentActivity : {}", incidentActivityDTO);
@@ -81,11 +87,11 @@ public class IncidentActivityResource {
     }
 
     /**
-     * GET  /incident-activities : get all the incidentActivities.
+     * GET  /v1/incident-activities : get all the incidentActivities.
      *
      * @return the ResponseEntity with status 200 (OK) and the list of incidentActivities in body
      */
-    @GetMapping("/incident-activities")
+    @GetMapping("/v1/incident-activities")
     @Timed
     public List<IncidentActivityDTO> getAllIncidentActivities() {
         log.debug("REST request to get all IncidentActivities");
@@ -93,12 +99,12 @@ public class IncidentActivityResource {
         }
 
     /**
-     * GET  /incident-activities/:id : get the "id" incidentActivity.
+     * GET  /v1/incident-activities/:id : get the "id" incidentActivity.
      *
      * @param id the id of the incidentActivityDTO to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the incidentActivityDTO, or with status 404 (Not Found)
      */
-    @GetMapping("/incident-activities/{id}")
+    @GetMapping("/v1/incident-activities/{id}")
     @Timed
     public ResponseEntity<IncidentActivityDTO> getIncidentActivity(@PathVariable Long id) {
         log.debug("REST request to get IncidentActivity : {}", id);
@@ -107,12 +113,12 @@ public class IncidentActivityResource {
     }
 
     /**
-     * DELETE  /incident-activities/:id : delete the "id" incidentActivity.
+     * DELETE  /v1/incident-activities/:id : delete the "id" incidentActivity.
      *
      * @param id the id of the incidentActivityDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/incident-activities/{id}")
+    @DeleteMapping("/v1/incident-activities/{id}")
     @Timed
     public ResponseEntity<Void> deleteIncidentActivity(@PathVariable Long id) {
         log.debug("REST request to delete IncidentActivity : {}", id);
@@ -121,13 +127,13 @@ public class IncidentActivityResource {
     }
 
     /**
-     * SEARCH  /_search/incident-activities?query=:query : search for the incidentActivity corresponding
+     * SEARCH  /v1/_search/incident-activities?query=:query : search for the incidentActivity corresponding
      * to the query.
      *
      * @param query the query of the incidentActivity search
      * @return the result of the search
      */
-    @GetMapping("/_search/incident-activities")
+    @GetMapping("/v1/_search/incident-activities")
     @Timed
     public List<IncidentActivityDTO> searchIncidentActivities(@RequestParam String query) {
         log.debug("REST request to search IncidentActivities for query {}", query);

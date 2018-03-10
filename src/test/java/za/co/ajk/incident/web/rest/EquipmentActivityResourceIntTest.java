@@ -1,14 +1,10 @@
 package za.co.ajk.incident.web.rest;
 
-import za.co.ajk.incident.IncidentModuleApp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
-import za.co.ajk.incident.domain.EquipmentActivity;
-import za.co.ajk.incident.repository.EquipmentActivityRepository;
-import za.co.ajk.incident.service.EquipmentActivityService;
-import za.co.ajk.incident.repository.search.EquipmentActivitySearchRepository;
-import za.co.ajk.incident.service.dto.EquipmentActivityDTO;
-import za.co.ajk.incident.service.mapper.EquipmentActivityMapper;
-import za.co.ajk.incident.web.rest.errors.ExceptionTranslator;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,16 +20,25 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
+import za.co.ajk.incident.IncidentModuleApp;
+import za.co.ajk.incident.domain.EquipmentActivity;
+import za.co.ajk.incident.repository.EquipmentActivityRepository;
+import za.co.ajk.incident.repository.search.EquipmentActivitySearchRepository;
+import za.co.ajk.incident.service.EquipmentActivityService;
+import za.co.ajk.incident.service.dto.EquipmentActivityDTO;
+import za.co.ajk.incident.service.mapper.EquipmentActivityMapper;
+import za.co.ajk.incident.web.rest.errors.ExceptionTranslator;
 
-import static za.co.ajk.incident.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static za.co.ajk.incident.web.rest.TestUtil.createFormattingConversionService;
 
 /**
  * Test class for the EquipmentActivityResource REST controller.
@@ -131,7 +136,7 @@ public class EquipmentActivityResourceIntTest {
 
         // Create the EquipmentActivity
         EquipmentActivityDTO equipmentActivityDTO = equipmentActivityMapper.toDto(equipmentActivity);
-        restEquipmentActivityMockMvc.perform(post("/api/equipment-activities")
+        restEquipmentActivityMockMvc.perform(post("/api/v1/equipment-activities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(equipmentActivityDTO)))
             .andExpect(status().isCreated());
@@ -162,7 +167,7 @@ public class EquipmentActivityResourceIntTest {
         EquipmentActivityDTO equipmentActivityDTO = equipmentActivityMapper.toDto(equipmentActivity);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restEquipmentActivityMockMvc.perform(post("/api/equipment-activities")
+        restEquipmentActivityMockMvc.perform(post("/api/v1/equipment-activities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(equipmentActivityDTO)))
             .andExpect(status().isBadRequest());
@@ -182,7 +187,7 @@ public class EquipmentActivityResourceIntTest {
         // Create the EquipmentActivity, which fails.
         EquipmentActivityDTO equipmentActivityDTO = equipmentActivityMapper.toDto(equipmentActivity);
 
-        restEquipmentActivityMockMvc.perform(post("/api/equipment-activities")
+        restEquipmentActivityMockMvc.perform(post("/api/v1/equipment-activities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(equipmentActivityDTO)))
             .andExpect(status().isBadRequest());
@@ -201,7 +206,7 @@ public class EquipmentActivityResourceIntTest {
         // Create the EquipmentActivity, which fails.
         EquipmentActivityDTO equipmentActivityDTO = equipmentActivityMapper.toDto(equipmentActivity);
 
-        restEquipmentActivityMockMvc.perform(post("/api/equipment-activities")
+        restEquipmentActivityMockMvc.perform(post("/api/v1/equipment-activities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(equipmentActivityDTO)))
             .andExpect(status().isBadRequest());
@@ -220,7 +225,7 @@ public class EquipmentActivityResourceIntTest {
         // Create the EquipmentActivity, which fails.
         EquipmentActivityDTO equipmentActivityDTO = equipmentActivityMapper.toDto(equipmentActivity);
 
-        restEquipmentActivityMockMvc.perform(post("/api/equipment-activities")
+        restEquipmentActivityMockMvc.perform(post("/api/v1/equipment-activities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(equipmentActivityDTO)))
             .andExpect(status().isBadRequest());
@@ -239,7 +244,7 @@ public class EquipmentActivityResourceIntTest {
         // Create the EquipmentActivity, which fails.
         EquipmentActivityDTO equipmentActivityDTO = equipmentActivityMapper.toDto(equipmentActivity);
 
-        restEquipmentActivityMockMvc.perform(post("/api/equipment-activities")
+        restEquipmentActivityMockMvc.perform(post("/api/v1/equipment-activities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(equipmentActivityDTO)))
             .andExpect(status().isBadRequest());
@@ -255,7 +260,7 @@ public class EquipmentActivityResourceIntTest {
         equipmentActivityRepository.saveAndFlush(equipmentActivity);
 
         // Get all the equipmentActivityList
-        restEquipmentActivityMockMvc.perform(get("/api/equipment-activities?sort=id,desc"))
+        restEquipmentActivityMockMvc.perform(get("/api/v1/equipment-activities?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(equipmentActivity.getId().intValue())))
@@ -274,7 +279,7 @@ public class EquipmentActivityResourceIntTest {
         equipmentActivityRepository.saveAndFlush(equipmentActivity);
 
         // Get the equipmentActivity
-        restEquipmentActivityMockMvc.perform(get("/api/equipment-activities/{id}", equipmentActivity.getId()))
+        restEquipmentActivityMockMvc.perform(get("/api/v1/equipment-activities/{id}", equipmentActivity.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(equipmentActivity.getId().intValue()))
@@ -290,7 +295,7 @@ public class EquipmentActivityResourceIntTest {
     @Transactional
     public void getNonExistingEquipmentActivity() throws Exception {
         // Get the equipmentActivity
-        restEquipmentActivityMockMvc.perform(get("/api/equipment-activities/{id}", Long.MAX_VALUE))
+        restEquipmentActivityMockMvc.perform(get("/api/v1/equipment-activities/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
 
@@ -315,7 +320,7 @@ public class EquipmentActivityResourceIntTest {
             .createdBy(UPDATED_CREATED_BY);
         EquipmentActivityDTO equipmentActivityDTO = equipmentActivityMapper.toDto(updatedEquipmentActivity);
 
-        restEquipmentActivityMockMvc.perform(put("/api/equipment-activities")
+        restEquipmentActivityMockMvc.perform(put("/api/v1/equipment-activities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(equipmentActivityDTO)))
             .andExpect(status().isOk());
@@ -345,7 +350,7 @@ public class EquipmentActivityResourceIntTest {
         EquipmentActivityDTO equipmentActivityDTO = equipmentActivityMapper.toDto(equipmentActivity);
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
-        restEquipmentActivityMockMvc.perform(put("/api/equipment-activities")
+        restEquipmentActivityMockMvc.perform(put("/api/v1/equipment-activities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(equipmentActivityDTO)))
             .andExpect(status().isCreated());
@@ -364,7 +369,7 @@ public class EquipmentActivityResourceIntTest {
         int databaseSizeBeforeDelete = equipmentActivityRepository.findAll().size();
 
         // Get the equipmentActivity
-        restEquipmentActivityMockMvc.perform(delete("/api/equipment-activities/{id}", equipmentActivity.getId())
+        restEquipmentActivityMockMvc.perform(delete("/api/v1/equipment-activities/{id}", equipmentActivity.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
@@ -385,7 +390,7 @@ public class EquipmentActivityResourceIntTest {
         equipmentActivitySearchRepository.save(equipmentActivity);
 
         // Search the equipmentActivity
-        restEquipmentActivityMockMvc.perform(get("/api/_search/equipment-activities?query=id:" + equipmentActivity.getId()))
+        restEquipmentActivityMockMvc.perform(get("/api/v1/_search/equipment-activities?query=id:" + equipmentActivity.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(equipmentActivity.getId().intValue())))

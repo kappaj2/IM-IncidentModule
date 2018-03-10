@@ -55,7 +55,7 @@ public class IncidentResource {
      * @return
      * @throws URISyntaxException
      */
-    @PostMapping("/incidents")
+    @PostMapping("/v1/incidents")
     @Timed
     public ResponseEntity<IncidentDTO> createNewIncident(@Valid @RequestBody CreateNewIncidentDTO createNewIncidentDTO) throws
                                                                                                  URISyntaxException {
@@ -66,7 +66,7 @@ public class IncidentResource {
     }
 
     /**
-     * PUT  /incidents : Updates an existing incident.
+     * PUT  /v1/incidents : Updates an existing incident.
      *
      * @param incidentDTO the incidentDTO to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated incidentDTO,
@@ -74,7 +74,7 @@ public class IncidentResource {
      * or with status 500 (Internal Server Error) if the incidentDTO couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/incidents")
+    @PutMapping("/v1/incidents")
     @Timed
     public ResponseEntity<IncidentDTO> updateIncident(@Valid @RequestBody CreateNewIncidentDTO createNewIncidentDTO) throws URISyntaxException {
         log.debug("REST request to update Incident : {}", createNewIncidentDTO);
@@ -87,11 +87,11 @@ public class IncidentResource {
     }
 
     /**
-     * GET  /incidents : get all the incidents.
+     * GET  /v1/incidents : get all the incidents.
      *
      * @return the ResponseEntity with status 200 (OK) and the list of incidents in body
      */
-    @GetMapping("/incidents")
+    @GetMapping("/v1/incidents")
     @Timed
     public List<IncidentDTO> getAllIncidents() {
         log.debug("REST request to get all Incidents");
@@ -99,12 +99,12 @@ public class IncidentResource {
         }
 
     /**
-     * GET  /incidents/:id : get the "id" incident.
+     * GET  /v1/incidents/:id : get the "id" incident.
      *
      * @param id the id of the incidentDTO to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the incidentDTO, or with status 404 (Not Found)
      */
-    @GetMapping("/incidents/{id}")
+    @GetMapping("/v1/incidents/{id}")
     @Timed
     public ResponseEntity<IncidentDTO> getIncident(@PathVariable Long id) {
         log.debug("REST request to get Incident : {}", id);
@@ -113,12 +113,12 @@ public class IncidentResource {
     }
 
     /**
-     * DELETE  /incidents/:id : delete the "id" incident.
+     * DELETE  /v1/incidents/:id : delete the "id" incident.
      *
      * @param id the id of the incidentDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/incidents/{id}")
+    @DeleteMapping("/v1/incidents/{id}")
     @Timed
     public ResponseEntity<Void> deleteIncident(@PathVariable Long id) {
         log.debug("REST request to delete Incident : {}", id);
@@ -127,13 +127,13 @@ public class IncidentResource {
     }
 
     /**
-     * SEARCH  /_search/incidents?query=:query : search for the incident corresponding
+     * SEARCH  /v1/_search/incidents?query=:query : search for the incident corresponding
      * to the query.
      *
      * @param query the query of the incident search
      * @return the result of the search
      */
-    @GetMapping("/_search/incidents")
+    @GetMapping("/v1/_search/incidents")
     @Timed
     public List<IncidentDTO> searchIncidents(@RequestParam String query) {
         log.debug("REST request to search Incidents for query {}", query);
