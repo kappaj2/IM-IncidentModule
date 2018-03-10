@@ -3,6 +3,7 @@ package za.co.ajk.incident.web.rest;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -11,6 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -24,12 +27,18 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.ajk.incident.IncidentModuleApp;
 import za.co.ajk.incident.domain.Company;
 import za.co.ajk.incident.domain.Country;
+import za.co.ajk.incident.domain.Equipment;
+import za.co.ajk.incident.domain.EquipmentActivity;
 import za.co.ajk.incident.domain.Incident;
+import za.co.ajk.incident.domain.IncidentActivity;
 import za.co.ajk.incident.domain.Region;
 import za.co.ajk.incident.enums.EventType;
 import za.co.ajk.incident.enums.IncidentStatusType;
 import za.co.ajk.incident.repository.CompanyRepository;
 import za.co.ajk.incident.repository.CountryRepository;
+import za.co.ajk.incident.repository.EquipmentActivityRepository;
+import za.co.ajk.incident.repository.EquipmentRepository;
+import za.co.ajk.incident.repository.IncidentActivityRepository;
 import za.co.ajk.incident.repository.IncidentRepository;
 import za.co.ajk.incident.repository.RegionRepository;
 import za.co.ajk.incident.repository.search.IncidentSearchRepository;
@@ -60,6 +69,8 @@ import static za.co.ajk.incident.web.rest.TestUtil.createFormattingConversionSer
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = IncidentModuleApp.class)
 public class IncidentResourceIntTest {
+    
+    private static final Logger log = LoggerFactory.getLogger(IncidentResourceIntTest.class);
     
     private static final Integer DEFAULT_INCIDENT_NUMBER = 1;
     private static final Integer UPDATED_INCIDENT_NUMBER = 2;
@@ -118,6 +129,9 @@ public class IncidentResourceIntTest {
     private IncidentService incidentService;
     
     @Autowired
+    private IncidentActivityRepository incidentActivityRepository;
+    
+    @Autowired
     private IncidentActivityService incidentActivityService;
     
     @Autowired
@@ -131,6 +145,12 @@ public class IncidentResourceIntTest {
     
     @Autowired
     private CompanyRepository companyRepository;
+    
+    @Autowired
+    private EquipmentRepository equipmentRepository;
+    
+    @Autowired
+    private EquipmentActivityRepository equipmentActivityRepository;
     
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -164,11 +184,17 @@ public class IncidentResourceIntTest {
         countryRepository.save(southAfrica);
         regionRepository.save(gauteng);
         companyRepository.save(ca1_1);
-        /*
-            Each test will increment the id's that H2 used for creating the entry. For company it will cause the DTO to fail
-            with a FK not found exception. Increment the DEFAULT_COMPANY with each run.
-         */
-        DEFAULT_COMPANY++;
+        
+        equipmentRepository.save(new Equipment()
+            .company(ca1_1)
+            .equipmentId(Integer.valueOf(1))
+            .dateAdded(Instant.now())
+            .addedBy("SYSTEM"));
+        equipmentRepository.save(new Equipment()
+            .company(ca1_1)
+            .equipmentId(Integer.valueOf(2))
+            .dateAdded(Instant.now())
+            .addedBy("SYSTEM"));
         
         final IncidentResource incidentResource = new IncidentResource(incidentService);
         this.restIncidentMockMvc = MockMvcBuilders.standaloneSetup(incidentResource)
@@ -205,7 +231,7 @@ public class IncidentResourceIntTest {
     
     public static CreateNewIncidentDTO createANewIncidentDTO() {
         CreateNewIncidentDTO createNewIncidentDTO = new CreateNewIncidentDTO();
-        createNewIncidentDTO.setCompanyId(DEFAULT_COMPANY);
+        createNewIncidentDTO.setCompanyId(1l);
         createNewIncidentDTO.setIncidentDescription(DEFAULT_INCIDENT_DESCRIPTION);
         createNewIncidentDTO.setIncidentHeader(DEFAULT_INCIDENT_HEADER);
         createNewIncidentDTO.setIncidentPriorityCode(DEFAULT_INCIDENT_PRIORITY_CODE);
@@ -213,6 +239,25 @@ public class IncidentResourceIntTest {
         createNewIncidentDTO.setIncidentStatusCode(DEFAULT_INCIDENT_STATUS_CODE);
         createNewIncidentDTO.setOperator(DEFAULT_OPERATOR);
         
+        CreateNewIncidentDTO.Equipment eq1 = new CreateNewIncidentDTO.Equipment();
+        eq1.setEquipmentActionCode("A1");
+        eq1.setEquipmentComment("Equipment 1 comment");
+        eq1.setEquipmentId(1l);
+        eq1.setOnLoan(true);
+        eq1.setReplacement(false);
+        
+        CreateNewIncidentDTO.Equipment eq2 = new CreateNewIncidentDTO.Equipment();
+        eq2.setEquipmentActionCode("A1");
+        eq2.setEquipmentComment("Equipment 2 comment");
+        eq2.setEquipmentId(2l);
+        eq2.setOnLoan(true);
+        eq2.setReplacement(false);
+        
+        List<CreateNewIncidentDTO.Equipment> equipmentList = new ArrayList<>();
+        equipmentList.add(eq1);
+        equipmentList.add(eq2);
+        
+        createNewIncidentDTO.setEquipmentList(equipmentList);
         return createNewIncidentDTO;
     }
     
@@ -234,9 +279,13 @@ public class IncidentResourceIntTest {
         int databaseSizeBeforeCreate = incidentRepository.findAll().size();
 
         /*
-            The input DTO is not a representation of an incident, but the required info for one.
+            The list of companies should contain one only. Get the newly create compnayId so we can create a new incident
+            using the createdNewIncidentDTO which requires the companyId;
          */
-        companyRepository.findAll();
+        List<Company> companyList = companyRepository.findAll();
+        createNewIncidentDTO.setCompanyId(companyList.get(0).getId());
+        
+        log.info("New compnay ID is : "+companyList.get(0).getId());
         
         restIncidentMockMvc.perform(post("/api/incidents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -298,7 +347,7 @@ public class IncidentResourceIntTest {
             assertThat(incidentAct.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
             assertThat(incidentAct.getEventNumber()).isEqualTo(1);
             assertThat(incidentAct.getEventTypeCode()).isEqualTo(DEFAULT_EVENT_TYPE_CODE);
-            assertThat(incidentAct.getId()).isEqualTo(1L);
+            assertThat(incidentAct.getId()).isNotNull();
             assertThat(incidentAct.getIncidentComment()).isEqualTo(DEFAULT_ACTIVITY_COMMENT);
             assertThat(incidentAct.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
             assertThat(incidentAct.getUpdatedStatusCode()).isEqualTo(DEFAULT_UPDATED_STATUS);
@@ -306,17 +355,59 @@ public class IncidentResourceIntTest {
             assertThat(incidentAct.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
         });
         
+        /*
+            Part of the incident activity is also the creation of the entries for the equipment involved.
+         */
+        List<IncidentActivity> incidentActivityList = incidentActivityRepository
+            .findIncidentActivitiesByIncident(testIncident);
+        incidentActivityList.stream().forEach(incidentActivity -> {
+            
+            incidentActivity.getEventNumber();
+            
+            List<EquipmentActivity> equipmentActivityList =
+                equipmentActivityRepository.findEquipmentActivitiesByIncidentActivity(incidentActivity);
+            
+            //  Should have two equipment entries for this activity.
+            assertThat(equipmentActivityList.size() == 2);
+            
+            equipmentActivityList.stream().forEach(equipmentActivity -> {
+                equipmentActivity.getCreatedBy();
+                
+                assertThat(equipmentActivity.getCreatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
+                
+                Duration createTimeLapse = Duration.between(equipmentActivity.getDateCreated(), instantNow);
+                long dateCreatedDur = createTimeLapse.toMillis();
+                assertThat(dateCreatedDur).isBetween(0l, 300000L);
+                
+                String targetComment1 = "Equipment 1 comment";
+                String targetComment2 = "Equipment 2 comment";
+                
+                //  The entries are not ordered, just make sure it is one of the two possibilities.
+                assertThat(
+                    (equipmentActivity.getActivityComment().equalsIgnoreCase(targetComment1)
+                        || (equipmentActivity.getActivityComment()).equalsIgnoreCase(targetComment2))
+                );
+                
+                assertThat(equipmentActivity.getEquipmentActionCode()).isEqualTo("A1");
+                assertThat(equipmentActivity.getId()).isNotNull();
+                assertThat(equipmentActivity.isOnLoan()).isEqualTo(true);
+                assertThat(equipmentActivity.isReplacement()).isEqualTo(false);
+                
+            });
+        });
+        
     }
     
     /**
      * Test that priority code is required. Expects a bad request response.
+     *
      * @throws Exception
      */
     @Test
     @Transactional
     public void checkIncidentPriorityCodeIsRequired() throws Exception {
         int databaseSizeBeforeTest = incidentRepository.findAll().size();
-    
+        
         CreateNewIncidentDTO createNewIncidentDTO = createANewIncidentDTO();
         
         // set the field null
@@ -333,13 +424,14 @@ public class IncidentResourceIntTest {
     
     /**
      * Check that incidentTypeCode is required.
+     *
      * @throws Exception
      */
     @Test
     @Transactional
     public void checkIncidentTypeCodeIsRequired() throws Exception {
         int databaseSizeBeforeTest = incidentRepository.findAll().size();
-    
+        
         CreateNewIncidentDTO createNewIncidentDTO = createANewIncidentDTO();
         createNewIncidentDTO.setIncidentTypeCode(null);
         
@@ -354,13 +446,14 @@ public class IncidentResourceIntTest {
     
     /**
      * Check that incident header is required.
+     *
      * @throws Exception
      */
     @Test
     @Transactional
     public void checkIncidentHeaderIsRequired() throws Exception {
         int databaseSizeBeforeTest = incidentRepository.findAll().size();
-    
+        
         CreateNewIncidentDTO createNewIncidentDTO = createANewIncidentDTO();
         createNewIncidentDTO.setIncidentHeader(null);
         
@@ -375,6 +468,7 @@ public class IncidentResourceIntTest {
     
     /**
      * Check that incident description is required.
+     *
      * @throws Exception
      */
     @Test
@@ -396,13 +490,14 @@ public class IncidentResourceIntTest {
     
     /**
      * Test that incident status code is required.
+     *
      * @throws Exception
      */
     @Test
     @Transactional
     public void checkIncidentStatusCodeIsRequired() throws Exception {
         int databaseSizeBeforeTest = incidentRepository.findAll().size();
-    
+        
         CreateNewIncidentDTO createNewIncidentDTO = createANewIncidentDTO();
         createNewIncidentDTO.setIncidentStatusCode(null);
         
@@ -414,7 +509,6 @@ public class IncidentResourceIntTest {
         List<Incident> incidentList = incidentRepository.findAll();
         assertThat(incidentList).hasSize(databaseSizeBeforeTest);
     }
-    
     
     @Test
     @Transactional

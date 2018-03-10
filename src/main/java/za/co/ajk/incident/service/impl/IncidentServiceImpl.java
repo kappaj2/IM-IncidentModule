@@ -10,24 +10,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import za.co.ajk.incident.domain.Company;
+import za.co.ajk.incident.domain.Equipment;
+import za.co.ajk.incident.domain.EquipmentActivity;
 import za.co.ajk.incident.domain.Incident;
 import za.co.ajk.incident.domain.IncidentActivity;
 import za.co.ajk.incident.enums.EventType;
 import za.co.ajk.incident.enums.IncidentStatusType;
 import za.co.ajk.incident.repository.CompanyRepository;
-import za.co.ajk.incident.repository.CountryRepository;
+import za.co.ajk.incident.repository.EquipmentActivityRepository;
 import za.co.ajk.incident.repository.IncidentActivityRepository;
 import za.co.ajk.incident.repository.IncidentRepository;
-import za.co.ajk.incident.repository.RegionRepository;
 import za.co.ajk.incident.repository.search.IncidentSearchRepository;
-import za.co.ajk.incident.service.CountryService;
+import za.co.ajk.incident.service.EquipmentService;
 import za.co.ajk.incident.service.IncidentService;
 import za.co.ajk.incident.service.dto.CreateNewIncidentDTO;
 import za.co.ajk.incident.service.dto.IncidentDTO;
+import za.co.ajk.incident.service.mapper.EquipmentMapper;
 import za.co.ajk.incident.service.mapper.IncidentMapper;
+import za.co.ajk.incident.web.rest.errors.InvalidEquipmentIdReceivedException;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
@@ -51,16 +55,16 @@ public class IncidentServiceImpl implements IncidentService {
     private IncidentActivityRepository incidentActivityRepository;
     
     @Autowired
-    private CountryService countryService;
-    
-    @Autowired
-    private CountryRepository countryRepository;
-    
-    @Autowired
-    private RegionRepository regionRepository;
+    private EquipmentActivityRepository equipmentActivityRepository;
     
     @Autowired
     private CompanyRepository companyRepository;
+    
+    @Autowired
+    private EquipmentService equipmentService;
+    
+    @Autowired
+    private EquipmentMapper equipmentMapper;
     
     public IncidentServiceImpl(IncidentRepository incidentRepository,
                                IncidentMapper incidentMapper,
@@ -78,6 +82,7 @@ public class IncidentServiceImpl implements IncidentService {
      * @return
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public IncidentDTO createNewIncident(CreateNewIncidentDTO createNewIncidentDTO) {
         
         // Find the company using the company id provided.
@@ -101,11 +106,40 @@ public class IncidentServiceImpl implements IncidentService {
         incident.setDateUpdated(Instant.now());
         incident.setUpdatedBy(createNewIncidentDTO.getOperator());
         
+        incidentRepository.save(incident);
+
         /*
-            Create the incident activity entry.
+            Add the incident event start activity
          */
-        Integer incidentActivityEventNumber = incidentActivityRepository.getMaxIncidentEventNumberForIncident(incident.getId());
+        IncidentActivity incidentActivity = createIncidentEventActivity(incident, createNewIncidentDTO);
+        
+        /*
+            Link all the equipment that is involved in the incident.
+         */
+        createIncidentEquipmentActivity(createNewIncidentDTO, incidentActivity, company);
+        
+        /*
+            Return the incident DTO. This will not include the activity, equipment, etc.
+            These need to be retrieve via their respective rest controllers.
+         */
+        IncidentDTO result = incidentMapper.toDto(incident);
+        incidentSearchRepository.save(incident);
+        return result;
+    }
     
+    /**
+     * Create incident activity for the specific incident.
+     *
+     * @param incident
+     * @param createNewIncidentDTO
+     * @Return IncidentActivity
+     */
+    private IncidentActivity createIncidentEventActivity(Incident incident,
+                                                         CreateNewIncidentDTO createNewIncidentDTO) {
+        
+        Integer incidentActivityEventNumber = incidentActivityRepository
+            .getMaxIncidentEventNumberForIncident(incident.getId());
+        
         incidentActivityEventNumber = incidentActivityEventNumber == null ? 1 : ++incidentActivityEventNumber;
         
         IncidentActivity incidentActivity = new IncidentActivity();
@@ -119,13 +153,44 @@ public class IncidentServiceImpl implements IncidentService {
         incidentActivity.setUpdatedBy(createNewIncidentDTO.getOperator());
         incidentActivity.setEventNumber(incidentActivityEventNumber);
         incidentActivity.setUpdatedPriorityCode(createNewIncidentDTO.getIncidentPriorityCode());
-        
-        incidentRepository.save(incident);
         incidentActivityRepository.save(incidentActivity);
         
-        IncidentDTO result = incidentMapper.toDto(incident);
-        incidentSearchRepository.save(incident);
-        return result;
+        return incidentActivity;
+    }
+    
+    /**
+     * The incident activity will be the link for equipment. This will allow equipment to be put on loan, replaced, etc.
+     *
+     * @param incidentActivity
+     * @param createNewIncidentDTO
+     */
+    private void createIncidentEquipmentActivity(CreateNewIncidentDTO createNewIncidentDTO,
+                                                 IncidentActivity incidentActivity,
+                                                 Company company) {
+        
+        List<CreateNewIncidentDTO.Equipment> equipList = createNewIncidentDTO.getEquipmentList();
+        
+        equipList.stream().forEach(equip -> {
+            
+            Equipment entity = equipmentService.getEquipmentByCompanyAndEquipmentId(company, equip.getEquipmentId());
+            
+            if (entity == null) {
+                log.info("Equipment not found in local DB");
+                throw new InvalidEquipmentIdReceivedException();
+            }
+            
+            EquipmentActivity equipmentActivity = new EquipmentActivity();
+            equipmentActivity.setEquipment(entity);
+            equipmentActivity.setIncidentActivity(incidentActivity);
+            equipmentActivity.setActivityComment(equip.getEquipmentComment());
+            equipmentActivity.setDateCreated(Instant.now());
+            equipmentActivity.setOnLoan(equip.isOnLoan());
+            equipmentActivity.setReplacement(equip.isReplacement());
+            equipmentActivity.setCreatedBy(createNewIncidentDTO.getOperator());
+            equipmentActivity.setEquipmentActionCode(equip.getEquipmentActionCode());
+            
+            equipmentActivityRepository.save(equipmentActivity);
+        });
     }
     
     /**

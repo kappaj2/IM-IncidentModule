@@ -1,16 +1,20 @@
 package za.co.ajk.incident.web.rest;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +29,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import za.co.ajk.incident.service.IncidentService;
 import za.co.ajk.incident.service.dto.CreateNewIncidentDTO;
 import za.co.ajk.incident.service.dto.IncidentDTO;
+import za.co.ajk.incident.web.rest.errors.InvalidEquipmentIdReceivedException;
 import za.co.ajk.incident.web.rest.util.HeaderUtil;
 
 /**
@@ -135,4 +140,8 @@ public class IncidentResource {
         return incidentService.search(query);
     }
 
+    @ExceptionHandler({InvalidEquipmentIdReceivedException.class})
+    void handleInvalidEquipmentRequest(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.BAD_REQUEST.value(), "Invalid equipment ID received for the company.");
+    }
 }

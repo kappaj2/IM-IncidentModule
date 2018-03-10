@@ -1,6 +1,7 @@
 package za.co.ajk.incident.service.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -28,6 +29,8 @@ public class CreateNewIncidentDTO implements Serializable {
     
     @NotNull
     private String operator;
+    
+    private List<Equipment> equipmentList;
     
     public String getIncidentPriorityCode() {
         return incidentPriorityCode;
@@ -83,5 +86,61 @@ public class CreateNewIncidentDTO implements Serializable {
     
     public void setOperator(String operator) {
         this.operator = operator;
+    }
+    
+    public List<Equipment> getEquipmentList() {
+        return equipmentList;
+    }
+    
+    public void setEquipmentList(List<Equipment> equipmentList) {
+        this.equipmentList = equipmentList;
+    }
+    
+    public static class Equipment{
+        private Long equipmentId;
+        private boolean onLoan;
+        private boolean isReplacement;
+        private String equipmentComment;
+        private String equipmentActionCode;
+        
+        public Long getEquipmentId() {
+            return equipmentId;
+        }
+    
+        public void setEquipmentId(Long equipmentId) {
+            this.equipmentId = equipmentId;
+        }
+    
+        public boolean isOnLoan() {
+            return onLoan;
+        }
+    
+        public void setOnLoan(boolean onLoan) {
+            this.onLoan = onLoan;
+        }
+    
+        public boolean isReplacement() {
+            return isReplacement;
+        }
+    
+        public void setReplacement(boolean replacement) {
+            isReplacement = replacement;
+        }
+    
+        public String getEquipmentComment() {
+            return equipmentComment;
+        }
+    
+        public void setEquipmentComment(String equipmentComment) {
+            this.equipmentComment = equipmentComment;
+        }
+    
+        public String getEquipmentActionCode() {
+            return equipmentActionCode;
+        }
+    
+        public void setEquipmentActionCode(String equipmentActionCode) {
+            this.equipmentActionCode = equipmentActionCode;
+        }
     }
 }
