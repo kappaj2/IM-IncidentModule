@@ -51,13 +51,13 @@ public class RegionResource {
     }
     
     /**
-     * POST  /regions : Create a new region.
+     * POST  /v1/regions : Create a new region.
      *
      * @param regionDTO the regionDTO to create
      * @return the ResponseEntity with status 201 (Created) and with body the new regionDTO, or with status 400 (Bad Request) if the region has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/regions")
+    @PostMapping("/v1/regions")
     @Timed
     public ResponseEntity<RegionDTO> createRegion(@Valid @RequestBody RegionDTO regionDTO) throws URISyntaxException {
         log.debug("REST request to save Region : {}", regionDTO);
@@ -71,7 +71,7 @@ public class RegionResource {
     }
     
     /**
-     * PUT  /regions : Updates an existing region.
+     * PUT  /v1/regions : Updates an existing region.
      *
      * @param regionDTO the regionDTO to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated regionDTO,
@@ -79,7 +79,7 @@ public class RegionResource {
      * or with status 500 (Internal Server Error) if the regionDTO couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/regions")
+    @PutMapping("/v1/regions")
     @Timed
     public ResponseEntity<RegionDTO> updateRegion(@Valid @RequestBody RegionDTO regionDTO) throws URISyntaxException {
         log.debug("REST request to update Region : {}", regionDTO);
@@ -93,11 +93,11 @@ public class RegionResource {
     }
     
     /**
-     * GET  /regions : get all the regions.
+     * GET  /v1/regions : get all the regions.
      *
      * @return the ResponseEntity with status 200 (OK) and the list of regions in body
      */
-    @GetMapping("/regions")
+    @GetMapping("/v1/regions")
     @Timed
     public List<RegionDTO> getAllRegions() {
         log.debug("REST request to get all Regions");
@@ -105,12 +105,12 @@ public class RegionResource {
     }
     
     /**
-     * GET  /regions/:id : get the "id" region.
+     * GET  /v1/regions/:id : get the "id" region.
      *
      * @param id the id of the regionDTO to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the regionDTO, or with status 404 (Not Found)
      */
-    @GetMapping("/regions/{id}")
+    @GetMapping("/v1/regions/{id}")
     @Timed
     public ResponseEntity<RegionDTO> getRegion(@PathVariable Long id) {
         log.debug("REST request to get Region : {}", id);
@@ -119,12 +119,12 @@ public class RegionResource {
     }
     
     /**
-     * DELETE  /regions/:id : delete the "id" region.
+     * DELETE  /v1/regions/:id : delete the "id" region.
      *
      * @param id the id of the regionDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/regions/{id}")
+    @DeleteMapping("/v1/regions/{id}")
     @Timed
     public ResponseEntity<Void> deleteRegion(@PathVariable Long id) {
         log.debug("REST request to delete Region : {}", id);
@@ -133,13 +133,13 @@ public class RegionResource {
     }
     
     /**
-     * SEARCH  /_search/regions?query=:query : search for the region corresponding
+     * SEARCH  /v1/_search/regions?query=:query : search for the region corresponding
      * to the query.
      *
      * @param query the query of the region search
      * @return the result of the search
      */
-    @GetMapping("/_search/regions")
+    @GetMapping("/v1/_search/regions")
     @Timed
     public List<RegionDTO> searchRegions(@RequestParam String query) {
         log.debug("REST request to search Regions for query {}", query);

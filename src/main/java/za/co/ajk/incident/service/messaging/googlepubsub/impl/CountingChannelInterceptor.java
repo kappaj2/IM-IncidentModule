@@ -4,10 +4,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.ChannelInterceptorAdapter;
 import org.springframework.stereotype.Component;
+
+import za.co.ajk.incident.config.MessageImplementationCondition;
 
 
 /**
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Component;
  * Show how to use channel interceptors.
  */
 @Component(value="channelInterceptorAdapter")
+@Conditional(MessageImplementationCondition.class)
 public class CountingChannelInterceptor extends ChannelInterceptorAdapter {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

@@ -287,7 +287,7 @@ public class IncidentResourceIntTest {
         
         log.info("New compnay ID is : "+companyList.get(0).getId());
         
-        restIncidentMockMvc.perform(post("/api/incidents")
+        restIncidentMockMvc.perform(post("/api/v1/incidents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(createNewIncidentDTO)))
             .andExpect(status().isCreated());
@@ -413,7 +413,7 @@ public class IncidentResourceIntTest {
         // set the field null
         createNewIncidentDTO.setIncidentPriorityCode(null);
         
-        restIncidentMockMvc.perform(post("/api/incidents")
+        restIncidentMockMvc.perform(post("/api/v1/incidents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(createNewIncidentDTO)))
             .andExpect(status().isBadRequest());
@@ -435,7 +435,7 @@ public class IncidentResourceIntTest {
         CreateNewIncidentDTO createNewIncidentDTO = createANewIncidentDTO();
         createNewIncidentDTO.setIncidentTypeCode(null);
         
-        restIncidentMockMvc.perform(post("/api/incidents")
+        restIncidentMockMvc.perform(post("/api/v1/incidents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(createNewIncidentDTO)))
             .andExpect(status().isBadRequest());
@@ -457,7 +457,7 @@ public class IncidentResourceIntTest {
         CreateNewIncidentDTO createNewIncidentDTO = createANewIncidentDTO();
         createNewIncidentDTO.setIncidentHeader(null);
         
-        restIncidentMockMvc.perform(post("/api/incidents")
+        restIncidentMockMvc.perform(post("/api/v1/incidents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(createNewIncidentDTO)))
             .andExpect(status().isBadRequest());
@@ -479,7 +479,7 @@ public class IncidentResourceIntTest {
         CreateNewIncidentDTO createNewIncidentDTO = createANewIncidentDTO();
         createNewIncidentDTO.setIncidentDescription(null);
         
-        restIncidentMockMvc.perform(post("/api/incidents")
+        restIncidentMockMvc.perform(post("/api/v1/incidents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(createNewIncidentDTO)))
             .andExpect(status().isBadRequest());
@@ -501,7 +501,7 @@ public class IncidentResourceIntTest {
         CreateNewIncidentDTO createNewIncidentDTO = createANewIncidentDTO();
         createNewIncidentDTO.setIncidentStatusCode(null);
         
-        restIncidentMockMvc.perform(post("/api/incidents")
+        restIncidentMockMvc.perform(post("/api/v1/incidents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(createNewIncidentDTO)))
             .andExpect(status().isBadRequest());
@@ -517,7 +517,7 @@ public class IncidentResourceIntTest {
         incidentRepository.saveAndFlush(incident);
         
         // Get all the incidentList
-        restIncidentMockMvc.perform(get("/api/incidents?sort=id,desc"))
+        restIncidentMockMvc.perform(get("/api/v1/incidents?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(incident.getId().intValue())))
@@ -543,7 +543,7 @@ public class IncidentResourceIntTest {
         incidentRepository.saveAndFlush(incident);
         
         // Get the incident
-        restIncidentMockMvc.perform(get("/api/incidents/{id}", incident.getId()))
+        restIncidentMockMvc.perform(get("/api/v1/incidents/{id}", incident.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(incident.getId().intValue()))
@@ -566,7 +566,7 @@ public class IncidentResourceIntTest {
     @Transactional
     public void getNonExistingIncident() throws Exception {
         // Get the incident
-        restIncidentMockMvc.perform(get("/api/incidents/{id}", Long.MAX_VALUE))
+        restIncidentMockMvc.perform(get("/api/v1/incidents/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
     
@@ -659,7 +659,7 @@ public class IncidentResourceIntTest {
         int databaseSizeBeforeDelete = incidentRepository.findAll().size();
         
         // Get the incident
-        restIncidentMockMvc.perform(delete("/api/incidents/{id}", incident.getId())
+        restIncidentMockMvc.perform(delete("/api/v1/incidents/{id}", incident.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
         
