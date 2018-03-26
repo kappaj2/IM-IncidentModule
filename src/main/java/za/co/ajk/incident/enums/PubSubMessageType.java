@@ -18,7 +18,7 @@ import za.co.ajk.incident.enums.enumwrappers.PubSubMessageTypeSerializer;
 @JsonSerialize(using = PubSubMessageTypeSerializer.class)
 public enum PubSubMessageType {
     
-    GENERIC("Generic", "Generic string message."),
+    GENERIC("GenericMessage", "Generic string message."),
     INCIDENT("IncidentMessage", "Message used to create/update/close incidents.");
     
     private String messageTypeCode;
