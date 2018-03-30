@@ -9,8 +9,11 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.checkerframework.checker.signature.qual.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
+import za.co.ajk.incident.security.SecurityUtils;
 import za.co.ajk.incident.service.IncidentService;
 import za.co.ajk.incident.service.dto.CreateNewIncidentDTO;
 import za.co.ajk.incident.service.dto.IncidentDTO;
@@ -38,7 +42,7 @@ import za.co.ajk.incident.web.rest.util.HeaderUtil;
 @RestController
 @RequestMapping("/api")
 public class IncidentResource {
-
+    
     private final Logger log = LoggerFactory.getLogger(IncidentResource.class);
 
     private static final String ENTITY_NAME = "incident";
@@ -59,6 +63,7 @@ public class IncidentResource {
     @Timed
     public ResponseEntity<IncidentDTO> createNewIncident(@Valid @RequestBody CreateNewIncidentDTO createNewIncidentDTO) throws
                                                                                                  URISyntaxException {
+        
         IncidentDTO result = incidentService.createNewIncident(createNewIncidentDTO);
         return ResponseEntity.created(new URI("/api/incidents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

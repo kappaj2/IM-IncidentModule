@@ -7,4 +7,5 @@ public interface RestTemplateService {
     
     JsonNode getEquipmentFromInventory(Long equipmentId);
 
+    JsonNode getUserDetails(String loginName);
 }

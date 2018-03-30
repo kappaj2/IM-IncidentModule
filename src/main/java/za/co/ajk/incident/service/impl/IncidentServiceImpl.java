@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import za.co.ajk.incident.domain.Company;
 import za.co.ajk.incident.domain.Equipment;
 import za.co.ajk.incident.domain.EquipmentActivity;
@@ -25,12 +26,14 @@ import za.co.ajk.incident.repository.EquipmentActivityRepository;
 import za.co.ajk.incident.repository.IncidentActivityRepository;
 import za.co.ajk.incident.repository.IncidentRepository;
 import za.co.ajk.incident.repository.search.IncidentSearchRepository;
+import za.co.ajk.incident.security.SecurityUtils;
 import za.co.ajk.incident.service.EquipmentService;
 import za.co.ajk.incident.service.IncidentService;
 import za.co.ajk.incident.service.dto.CreateNewIncidentDTO;
 import za.co.ajk.incident.service.dto.IncidentDTO;
 import za.co.ajk.incident.service.mapper.EquipmentMapper;
 import za.co.ajk.incident.service.mapper.IncidentMapper;
+import za.co.ajk.incident.service.restio.RestTemplateService;
 import za.co.ajk.incident.web.rest.errors.InvalidEquipmentIdReceivedException;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -66,6 +69,9 @@ public class IncidentServiceImpl implements IncidentService {
     @Autowired
     private EquipmentMapper equipmentMapper;
     
+    @Autowired
+    private RestTemplateService restTemplateService;
+    
     public IncidentServiceImpl(IncidentRepository incidentRepository,
                                IncidentMapper incidentMapper,
                                IncidentSearchRepository incidentSearchRepository) {
@@ -84,6 +90,9 @@ public class IncidentServiceImpl implements IncidentService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public IncidentDTO createNewIncident(CreateNewIncidentDTO createNewIncidentDTO) {
+    
+        JsonNode jsonNode = restTemplateService.getUserDetails(SecurityUtils.getCurrentUserLogin().get());
+        createNewIncidentDTO.setOperator(Integer.toString(jsonNode.get("id").intValue()));
         
         // Find the company using the company id provided.
         Company company = companyRepository.getOne(createNewIncidentDTO.getCompanyId());
@@ -169,6 +178,9 @@ public class IncidentServiceImpl implements IncidentService {
                                                  Company company) {
         
         List<CreateNewIncidentDTO.Equipment> equipList = createNewIncidentDTO.getEquipmentList();
+        if(equipList == null){
+            return;
+        }
         
         equipList.stream().forEach(equip -> {
             

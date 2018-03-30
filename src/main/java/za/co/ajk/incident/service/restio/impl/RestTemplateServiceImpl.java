@@ -20,7 +20,8 @@ public class RestTemplateServiceImpl implements RestTemplateService {
     
     private static final Logger log = LoggerFactory.getLogger(RestTemplateServiceImpl.class);
     
-    private static final String INVENTORY_MODULE = "http://inventorymodule/api/equipment/{id}";
+    private static final String INVENTORY_MODULE = "http://inventorymodule/api/v1/equipment/{id}";
+    private static final String SYSTEM_GATEWAY_MODULE = "http://systemgatewaymodule/api/users/{login}";
     
     @Autowired
     private ObjectMapper objectMapper;
@@ -37,6 +38,17 @@ public class RestTemplateServiceImpl implements RestTemplateService {
         ResponseEntity<JsonNode> response = restTemplate.getForEntity(INVENTORY_MODULE,
                                                                         JsonNode.class,
                                                                         params);
+        return response.getBody();
+    }
+    
+    @Override
+    public JsonNode getUserDetails(String loginName){
+    
+        Map<String, Object> params = new HashMap<>();
+        params.put("login", loginName);
+        ResponseEntity<JsonNode> response = restTemplate.getForEntity(SYSTEM_GATEWAY_MODULE,
+            JsonNode.class,
+            params);
         return response.getBody();
     }
 }

@@ -59,7 +59,7 @@ public class CompanyResource {
             throw new BadRequestAlertException("A new company cannot already have an ID", ENTITY_NAME, "idexists");
         }
         CompanyDTO result = companyService.save(companyDTO);
-        return ResponseEntity.created(new URI("/api/companies/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/v1/companies/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
