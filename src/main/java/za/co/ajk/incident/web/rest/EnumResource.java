@@ -2,13 +2,15 @@ package za.co.ajk.incident.web.rest;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
-import lombok.extern.slf4j.Slf4j;
 import za.co.ajk.incident.service.EnumInformation;
 import za.co.ajk.incident.service.dto.EnumInformationDTO;
 
@@ -16,10 +18,11 @@ import za.co.ajk.incident.service.dto.EnumInformationDTO;
 /**
  * Rest controller that will export the different Enum's so we can lookup and use in the UI.
  */
-@Slf4j
 @RestController
 @RequestMapping("/api")
 public class EnumResource {
+    
+    private final Logger log = LoggerFactory.getLogger(EnumResource.class);
     
     @Autowired
     private EnumInformation enumInformation;
@@ -31,7 +34,7 @@ public class EnumResource {
      */
     @GetMapping("/v1/enuminfo/{enumType}")
     @Timed
-    public List<EnumInformationDTO> getENUMInformation(String enumType) {
+    public List<EnumInformationDTO> getENUMInformation(@PathVariable  String enumType) {
         log.debug("REST request to get information for enum "+enumType);
         return enumInformation.retrieveEnumInformation(enumType);
     }
