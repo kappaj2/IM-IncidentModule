@@ -4,14 +4,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import za.co.ajk.incident.enums.enumwrappers.EventTypeDeserializer;
-import za.co.ajk.incident.enums.enumwrappers.EventTypeSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 
-@JsonDeserialize(using = EventTypeDeserializer.class)
-@JsonSerialize(using = EventTypeSerializer.class)
+//@JsonDeserialize(using = EventTypeDeserializer.class)
+//@JsonSerialize(using = EventTypeSerializer.class)
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EventType {
     
     OPEN_INCIDENT("OPEN", "Start a new incident"),

@@ -4,18 +4,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import za.co.ajk.incident.enums.enumwrappers.PubSubMessageTypeDeserializer;
-import za.co.ajk.incident.enums.enumwrappers.PubSubMessageTypeSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 /**
  * The different message types that will be transmitted between the modules.
  * Each module can in turn have different message types, it create of Incident, update of Incident, etc.
  */
-@JsonDeserialize(using = PubSubMessageTypeDeserializer.class)
-@JsonSerialize(using = PubSubMessageTypeSerializer.class)
+//@JsonDeserialize(using = PubSubMessageTypeDeserializer.class)
+//@JsonSerialize(using = PubSubMessageTypeSerializer.class)
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum PubSubMessageType {
     
     GENERIC("GenericMessage", "Generic string message."),

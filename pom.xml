@@ -120,6 +120,9 @@
             <artifactId>protobuf-java</artifactId>
             <version>3.4.0</version>
         </dependency>
+
+
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-gcp-starter-pubsub</artifactId>
@@ -128,6 +131,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-integration-gcp</artifactId>
         </dependency>
+
+
+
+
+
         <dependency>
             <groupId>com.google.instrumentation</groupId>
             <artifactId>instrumentation-api</artifactId>

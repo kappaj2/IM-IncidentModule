@@ -4,14 +4,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import za.co.ajk.incident.enums.enumwrappers.IncidentStatusTypeDeserializer;
-import za.co.ajk.incident.enums.enumwrappers.IncidentStatusTypeSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 
-@JsonDeserialize(using = IncidentStatusTypeDeserializer.class)
-@JsonSerialize(using = IncidentStatusTypeSerializer.class)
+//@JsonDeserialize(using = IncidentStatusTypeDeserializer.class)
+//@JsonSerialize(using = IncidentStatusTypeSerializer.class)
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum IncidentStatusType {
     
     OPENED("OPENED", "Incident Created"),
